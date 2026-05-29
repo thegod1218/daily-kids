@@ -5,7 +5,11 @@ export default function App() {
   const [userType, setUserType] = useState(null);
   const [tab, setTab] = useState('home');
   const [emotion, setEmotion] = useState('happy');
-
+  const [diary, setDiary] = useState('');
+  const [planDiary, setPlanDiary] = useState('');
+  const [ageGroup, setAgeGroup] = useState('lower');
+  const [selectedBook, setSelectedBook] = useState('오늘의 마음 사전');
+  const [bookReport, setBookReport] = useState('');
   const [missionStatus, setMissionStatus] = useState({
     '숙제하기': 'ready',
     '태권도 가기': 'ready',
@@ -27,27 +31,72 @@ export default function App() {
   };
 
   const emotionMap = {
-    happy: { icon: '😊', label: '행복', text: '오늘 기분이 좋아 보여요. 좋았던 순간을 짧게 기록해보면 좋아요.' },
-    calm: { icon: '😐', label: '보통', text: '평온한 하루예요. 조용한 독서나 산책이 잘 맞아요.' },
-    sad: { icon: '😢', label: '속상', text: '속상한 마음이 있었나 봐요. 먼저 마음을 들어주는 시간이 필요해요.' },
-    tired: { icon: '😴', label: '피곤', text: '피곤함이 보여요. 오늘은 루틴을 줄이고 일찍 쉬는 걸 추천해요.' },
+    happy: {
+      icon: '😊',
+      label: '행복',
+      text: '오늘 기분이 좋아 보여요. 좋았던 순간을 짧게 기록해보면 좋아요.',
+      contents: ['좋았던 일 3가지 말하기', '가족 산책 15분', '잠들기 전 칭찬 카드'],
+    },
+    calm: {
+      icon: '😐',
+      label: '보통',
+      text: '평온한 하루예요. 조용한 독서나 가벼운 정리 루틴이 잘 맞아요.',
+      contents: ['10분 독서 루틴', '방 정리 미션', '차분한 음악 듣기'],
+    },
+    sad: {
+      icon: '😢',
+      label: '속상',
+      text: '속상한 마음이 있었나 봐요. 먼저 마음을 들어주고 쉬는 시간이 필요해요.',
+      contents: ['토리와 3번 숨쉬기', '기분 그림 그리기', '부모님과 산책하기'],
+    },
+    tired: {
+      icon: '😴',
+      label: '피곤',
+      text: '몸이 쉬고 싶다는 신호예요. 오늘은 루틴을 조금 가볍게 줄여보세요.',
+      contents: ['취침 20분 앞당기기', '따뜻한 물 마시기', '짧은 스트레칭'],
+    },
   };
 
   const schedule = [
-    { group: '아침', icon: '☀️', items: [
-      { time: '07:30', title: '기상하기', done: true },
-      { time: '07:40', title: '양치하기', done: true },
-      { time: '08:20', title: '가방 챙기기', done: false },
-    ]},
-    { group: '오후', icon: '🏫', items: [
-      { time: '15:00', title: '숙제하기', done: false },
-      { time: '16:00', title: '태권도 가기', done: false },
-    ]},
-    { group: '저녁', icon: '🌙', items: [
-      { time: '20:00', title: '독서 10분', done: false },
-      { time: '21:00', title: '잠자리 준비', done: false },
-    ]},
+    {
+      group: '아침',
+      icon: '☀️',
+      items: [
+        { time: '07:30', title: '기상하기', done: true },
+        { time: '07:40', title: '양치하기', done: true },
+        { time: '08:20', title: '가방 챙기기', done: false },
+      ],
+    },
+    {
+      group: '오후',
+      icon: '🏫',
+      items: [
+        { time: '15:00', title: '숙제하기', done: false },
+        { time: '16:00', title: '태권도 가기', done: false },
+      ],
+    },
+    {
+      group: '저녁',
+      icon: '🌙',
+      items: [
+        { time: '20:00', title: '독서 10분', done: false },
+        { time: '21:00', title: '잠자리 준비', done: false },
+      ],
+    },
   ];
+
+  const books = [
+    { title: '오늘의 마음 사전', age: '초등 저학년', desc: '감정을 말로 표현하는 연습을 도와주는 책' },
+    { title: '작은 습관의 힘', age: '초등 고학년', desc: '매일의 습관과 성장에 대해 생각해보는 책' },
+    { title: '토리의 별 모으기', age: '유아~초등', desc: '성취감과 보상을 재미있게 이해하는 이야기' },
+  ];
+
+  const ageLimits = {
+    preschool: { label: '유아', max: 30, guide: '한 문장 또는 그림 설명' },
+    lower: { label: '초등 저학년', max: 100, guide: '50~100자 권장' },
+    upper: { label: '초등 고학년', max: 300, guide: '150~300자 권장' },
+    middle: { label: '중등', max: 600, guide: '300~600자 권장' },
+  };
 
   const checkins = [
     { place: '학교', time: '08:34', status: '도착 확인' },
@@ -55,7 +104,15 @@ export default function App() {
     { place: '집', time: '17:21', status: '도착 예정' },
   ];
 
-  const pendingMissions = Object.entries(missionStatus).filter(([_, s]) => s === 'pending');
+  const currentEmotion = emotionMap[emotion];
+  const pendingMissions = Object.entries(missionStatus).filter(([_, status]) => status === 'pending');
+  const allPlans = schedule.flatMap((s) => s.items);
+  const donePlans = allPlans.filter((item) => item.done || missionStatus[item.title] === 'approved').length;
+  const planRate = Math.round((donePlans / allPlans.length) * 100);
+
+  const changeMission = (title, next) => {
+    setMissionStatus((prev) => ({ ...prev, [title]: next }));
+  };
 
   const Tori = ({ small = false }) => (
     <div style={{ width: small ? 72 : 128, height: small ? 72 : 128, position: 'relative', margin: small ? 0 : '0 auto' }}>
@@ -73,7 +130,7 @@ export default function App() {
 
   const Shell = ({ children, center = false }) => (
     <div style={{ minHeight: '100vh', background: colors.bg, display: 'flex', justifyContent: 'center', alignItems: center ? 'center' : 'flex-start', padding: 20, boxSizing: 'border-box', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-      <div style={{ width: '100%', maxWidth: 430, minHeight: center ? 'auto' : 'calc(100vh - 40px)', background: center ? colors.surface : 'transparent', borderRadius: center ? 34 : 0, padding: center ? 30 : 0, boxSizing: 'border-box', boxShadow: center ? '0 20px 60px rgba(90,70,45,.12)' : 'none', border: center ? `1px solid ${colors.line}` : 'none', textAlign: center ? 'center' : 'left', paddingBottom: center ? 30 : 90 }}>
+      <div style={{ width: '100%', maxWidth: 430, minHeight: center ? 'auto' : 'calc(100vh - 40px)', background: center ? colors.surface : 'transparent', borderRadius: center ? 34 : 0, padding: center ? 30 : 0, boxSizing: 'border-box', boxShadow: center ? '0 20px 60px rgba(90,70,45,.12)' : 'none', border: center ? `1px solid ${colors.line}` : 'none', textAlign: center ? 'center' : 'left', paddingBottom: center ? 30 : 96 }}>
         {children}
       </div>
     </div>
@@ -103,6 +160,10 @@ export default function App() {
     <input type={type} placeholder={placeholder} style={{ width: '100%', padding: '16px 17px', marginBottom: 12, borderRadius: 18, border: `1px solid ${colors.line}`, background: '#FFFCF8', fontSize: 15, boxSizing: 'border-box', outline: 'none', color: colors.text }} />
   );
 
+  const TextArea = ({ value, onChange, placeholder, maxLength }) => (
+    <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} maxLength={maxLength} style={{ width: '100%', minHeight: 96, padding: 16, borderRadius: 20, border: `1px solid ${colors.line}`, background: '#FFFCF8', boxSizing: 'border-box', resize: 'none', outline: 'none', fontSize: 14, lineHeight: 1.6, color: colors.text }} />
+  );
+
   const Header = ({ title, sub }) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
       <div>
@@ -112,8 +173,6 @@ export default function App() {
       <div style={{ width: 42, height: 42, borderRadius: '50%', background: colors.surface, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${colors.line}` }}>🔔</div>
     </div>
   );
-
-  const changeMission = (title, next) => setMissionStatus(prev => ({ ...prev, [title]: next }));
 
   const statusButton = (title) => {
     const status = missionStatus[title] || 'none';
@@ -226,17 +285,28 @@ export default function App() {
           </div>
           <div style={{ background: colors.soft, borderRadius: 22, padding: 16 }}>
             <div style={{ fontSize: 13, color: colors.primary, fontWeight: 900, marginBottom: 8 }}>AI 추천 솔루션</div>
-            <p style={{ margin: 0, color: colors.text, fontSize: 14, lineHeight: 1.65 }}>{emotionMap[emotion].text}</p>
+            <p style={{ margin: 0, color: colors.text, fontSize: 14, lineHeight: 1.65 }}>{currentEmotion.text}</p>
           </div>
         </Panel>
       </Section>
 
-      <Section title="맞춤 콘텐츠">
+      <Section title="오늘의 일기" caption="짧게라도 오늘의 마음을 남겨요.">
+        <Panel>
+          <TextArea value={diary} onChange={setDiary} placeholder="오늘 좋았던 일이나 속상했던 일을 적어보세요." maxLength={120} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, color: colors.sub, fontSize: 12 }}>
+            <span>{diary.length}/120자</span>
+            <button onClick={() => alert('일기가 저장되었어요.')} style={{ border: 'none', background: colors.primary, color: '#fff', borderRadius: 999, padding: '8px 14px', fontWeight: 800 }}>저장</button>
+          </div>
+        </Panel>
+      </Section>
+
+      <Section title="맞춤 콘텐츠" caption="아이 상태에 맞춰 오늘 해볼 활동을 추천해요.">
         <div style={{ display: 'grid', gap: 12 }}>
-          {['토리와 3번 숨쉬기', '좋았던 일 3가지 말하기', '잠들기 전 가족 대화'].map(item => (
-            <Panel key={item} style={{ padding: 16, background: '#F4EEE6' }}>
-              <div style={{ fontWeight: 900, color: colors.text }}>{item}</div>
+          {currentEmotion.contents.map((item, idx) => (
+            <Panel key={item} style={{ padding: 16, background: idx === 0 ? '#F4EEE6' : colors.surface }}>
+              <div style={{ fontWeight: 900, color: colors.text }}>{idx + 1}. {item}</div>
               <div style={{ color: colors.sub, fontSize: 13, marginTop: 6 }}>3분 안에 시작할 수 있는 작은 활동이에요.</div>
+              <button onClick={() => alert(`${item} 콘텐츠를 시작합니다.`)} style={{ marginTop: 12, border: 'none', background: colors.primarySoft, color: colors.primary, borderRadius: 999, padding: '8px 13px', fontWeight: 850 }}>시작하기</button>
             </Panel>
           ))}
         </div>
@@ -247,7 +317,15 @@ export default function App() {
   const ChildPlan = () => (
     <>
       <Header title="오늘의 생활계획표" sub="아이 화면" />
-      {schedule.map(block => (
+      <Panel style={{ padding: 24, marginBottom: 14 }}>
+        <div style={{ color: colors.sub, fontSize: 13, fontWeight: 800 }}>오늘의 진행률</div>
+        <h1 style={{ margin: '8px 0 6px', color: colors.text, fontSize: 30 }}>{allPlans.length}개 중 {donePlans}개 완료</h1>
+        <div style={{ height: 10, borderRadius: 999, background: '#EEE4D8', marginTop: 14, overflow: 'hidden' }}>
+          <div style={{ width: `${planRate}%`, height: '100%', background: colors.primary, borderRadius: 999 }} />
+        </div>
+      </Panel>
+
+      {schedule.map((block) => (
         <Panel key={block.group} style={{ marginBottom: 14 }}>
           <div style={{ fontWeight: 900, color: colors.text, marginBottom: 12 }}>{block.icon} {block.group}</div>
           {block.items.map((item, idx) => (
@@ -261,6 +339,17 @@ export default function App() {
           ))}
         </Panel>
       ))}
+
+      <Section title="오늘 돌아보기" caption="계획을 마친 뒤 한 줄 일기를 남겨요.">
+        <Panel>
+          <TextArea value={planDiary} onChange={setPlanDiary} placeholder="오늘 계획 중 가장 잘한 일은 무엇인가요?" maxLength={100} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, color: colors.sub, fontSize: 12 }}>
+            <span>{planDiary.length}/100자</span>
+            <button onClick={() => alert('계획 일기가 저장되었어요.')} style={{ border: 'none', background: colors.primary, color: '#fff', borderRadius: 999, padding: '8px 14px', fontWeight: 800 }}>저장</button>
+          </div>
+        </Panel>
+      </Section>
+
       <Section title="안심 체크인" caption="학교·학원·집 등 지정 장소 도착을 확인해요.">
         <Panel>
           <p style={{ color: colors.sub, lineHeight: 1.6, marginTop: 0 }}>실시간 감시가 아니라 지정 장소 도착 여부만 확인하는 방식이에요.</p>
@@ -270,21 +359,61 @@ export default function App() {
     </>
   );
 
+  const ChildBook = () => {
+    const limit = ageLimits[ageGroup];
+
+    return (
+      <>
+        <Header title="독서통장" sub="Daily Kids" />
+        <Section title="연령별 추천 도서" caption="추후 무료 도서 API와 연결해 실제 도서를 추천할 예정이에요.">
+          <Panel>
+            {books.map((book) => (
+              <button key={book.title} onClick={() => setSelectedBook(book.title)} style={{ width: '100%', textAlign: 'left', border: `1px solid ${selectedBook === book.title ? colors.primary : colors.line}`, background: selectedBook === book.title ? colors.primarySoft : colors.surface, borderRadius: 20, padding: 14, marginBottom: 10, cursor: 'pointer' }}>
+                <div style={{ fontWeight: 900, color: colors.text }}>{book.title}</div>
+                <div style={{ color: colors.sub, fontSize: 12, marginTop: 4 }}>{book.age} · {book.desc}</div>
+              </button>
+            ))}
+            <Button onClick={() => alert('추후 도서관 정보나루/국립중앙도서관 API와 연결 예정입니다.')}>무료 도서 검색하기</Button>
+          </Panel>
+        </Section>
+
+        <Section title="독후감 작성" caption={`${limit.label} 기준 · ${limit.guide}`}>
+          <Panel>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 14 }}>
+              {Object.entries(ageLimits).map(([key, value]) => (
+                <button key={key} onClick={() => { setAgeGroup(key); setBookReport(''); }} style={{ border: ageGroup === key ? `1.5px solid ${colors.primary}` : `1px solid ${colors.line}`, background: ageGroup === key ? colors.primarySoft : colors.surface, borderRadius: 16, padding: '10px 4px', color: colors.sub, fontWeight: 800, fontSize: 12 }}>
+                  {value.label}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ color: colors.sub, fontSize: 13, marginBottom: 10 }}>선택한 책: <b style={{ color: colors.text }}>{selectedBook}</b></div>
+            <TextArea value={bookReport} onChange={setBookReport} placeholder="이 책에서 가장 기억에 남는 장면을 적어보세요." maxLength={limit.max} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, color: colors.sub, fontSize: 12 }}>
+              <span>{bookReport.length}/{limit.max}자</span>
+              <button onClick={() => alert('독후감이 저장되었어요.')} style={{ border: 'none', background: colors.primary, color: '#fff', borderRadius: 999, padding: '8px 14px', fontWeight: 800 }}>저장</button>
+            </div>
+          </Panel>
+        </Section>
+      </>
+    );
+  };
+
   const ParentHome = () => (
     <>
       <Header title="도윤이 오늘 요약" sub="Parent Dashboard" />
       <Panel>
         <h3 style={{ marginTop: 0 }}>오늘 상태</h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-          <div style={{ background: colors.soft, borderRadius: 20, padding: 16, color: colors.sub }}>미션 성공률<br /><b style={{ color: colors.text, fontSize: 24 }}>68%</b></div>
-          <div style={{ background: colors.soft, borderRadius: 20, padding: 16, color: colors.sub }}>오늘 감정<br /><b style={{ color: colors.text, fontSize: 24 }}>{emotionMap[emotion].icon}</b></div>
+          <div style={{ background: colors.soft, borderRadius: 20, padding: 16, color: colors.sub }}>미션 성공률<br /><b style={{ color: colors.text, fontSize: 24 }}>{planRate}%</b></div>
+          <div style={{ background: colors.soft, borderRadius: 20, padding: 16, color: colors.sub }}>오늘 감정<br /><b style={{ color: colors.text, fontSize: 24 }}>{currentEmotion.icon}</b></div>
         </div>
       </Panel>
 
       <Section title="오늘의 추천" caption="오늘 바로 해볼 수 있는 행동 추천이에요.">
         <Panel style={{ background: '#F4EEE6' }}>
           <p style={{ margin: 0, lineHeight: 1.7, color: colors.text }}>
-            도윤이의 오늘 감정은 <b>{emotionMap[emotion].label}</b> 상태예요. 오늘은 무리한 루틴보다 짧은 대화와 가벼운 활동을 추천해요.
+            도윤이의 오늘 감정은 <b>{currentEmotion.label}</b> 상태예요. 오늘은 무리한 루틴보다 짧은 대화와 가벼운 활동을 추천해요.
           </p>
         </Panel>
       </Section>
@@ -307,7 +436,7 @@ export default function App() {
       <Header title="주간 리포트" sub="Parent Dashboard" />
       <Panel>
         <h3 style={{ marginTop: 0 }}>미션 성공 그래프</h3>
-        {['월','화','수','목','금','토','일'].map((d, i) => (
+        {['월', '화', '수', '목', '금', '토', '일'].map((d, i) => (
           <div key={d} style={{ marginBottom: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: colors.sub }}><span>{d}</span><b>{55 + i * 6}%</b></div>
             <div style={{ height: 9, background: colors.soft, borderRadius: 999, marginTop: 5 }}>
@@ -348,7 +477,7 @@ export default function App() {
     <>
       <Header title="선물" sub="Parent Dashboard" />
       <Section title="보상 추천" caption="미션 달성률에 맞춰 선물을 추천해요.">
-        {['편의점 아이스크림 쿠폰', '어린이 도서 쿠폰', '문구 세트'].map(item => (
+        {['편의점 아이스크림 쿠폰', '어린이 도서 쿠폰', '문구 세트'].map((item) => (
           <Panel key={item} style={{ padding: 16, marginBottom: 12 }}>
             <div style={{ fontWeight: 900 }}>🎁 {item}</div>
             <div style={{ color: colors.sub, fontSize: 13, marginTop: 6 }}>추후 쇼핑몰/e쿠폰몰 연동 예정</div>
@@ -366,8 +495,8 @@ export default function App() {
   );
 
   const navs = userType === 'parent'
-    ? [['home','홈'], ['report','리포트'], ['approve','승인'], ['gift','선물'], ['setting','설정']]
-    : [['home','홈'], ['plan','계획'], ['money','용돈'], ['book','독서'], ['tori','토리']];
+    ? [['home', '홈'], ['report', '리포트'], ['approve', '승인'], ['gift', '선물'], ['setting', '설정']]
+    : [['home', '홈'], ['plan', '계획'], ['money', '용돈'], ['book', '독서'], ['tori', '토리']];
 
   const BottomNav = () => (
     <div style={{ position: 'fixed', left: '50%', bottom: 14, transform: 'translateX(-50%)', width: 'calc(100% - 32px)', maxWidth: 430, background: 'rgba(255,255,255,.94)', border: `1px solid ${colors.line}`, borderRadius: 24, padding: 8, display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', boxShadow: '0 16px 45px rgba(90,70,45,.16)', backdropFilter: 'blur(12px)' }}>
@@ -383,7 +512,8 @@ export default function App() {
     <Shell>
       {userType === 'child' && tab === 'home' && <ChildHome />}
       {userType === 'child' && tab === 'plan' && <ChildPlan />}
-      {userType === 'child' && tab !== 'home' && tab !== 'plan' && <Placeholder title={navs.find(n => n[0] === tab)?.[1]} />}
+      {userType === 'child' && tab === 'book' && <ChildBook />}
+      {userType === 'child' && !['home', 'plan', 'book'].includes(tab) && <Placeholder title={navs.find((n) => n[0] === tab)?.[1]} />}
 
       {userType === 'parent' && tab === 'home' && <ParentHome />}
       {userType === 'parent' && tab === 'report' && <ParentReport />}
