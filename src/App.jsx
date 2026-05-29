@@ -5,10 +5,11 @@ export default function App() {
   const [userType, setUserType] = useState(null);
   const [tab, setTab] = useState('home');
   const [emotion, setEmotion] = useState('happy');
+
   const [missionStatus, setMissionStatus] = useState({
     '숙제하기': 'ready',
     '태권도 가기': 'ready',
-    '독서 10분': 'ready'
+    '독서 10분': 'ready',
   });
 
   const colors = {
@@ -17,222 +18,229 @@ export default function App() {
     soft: '#F8F2EA',
     primary: '#D98C5F',
     primarySoft: '#F4DFD0',
+    blue: '#C8D9E6',
+    blueDark: '#91AFC4',
     text: '#232323',
     sub: '#7A756F',
     line: '#E8DED2',
     green: '#9BAF92',
-    blue: '#C8D9E6'
   };
 
   const emotionMap = {
-    happy: ['😊', '행복', '오늘 기분이 좋아 보여요. 가족과 좋았던 순간을 기록해보세요.'],
-    calm: ['😐', '보통', '평온한 하루예요. 조용한 독서나 산책이 잘 맞아요.'],
-    sad: ['😢', '속상', '속상한 마음이 있었나 봐요. 먼저 충분히 들어주는 시간이 필요해요.'],
-    tired: ['😴', '피곤', '피곤함이 보여요. 오늘은 루틴을 줄이고 일찍 쉬는 걸 추천해요.']
+    happy: { icon: '😊', label: '행복', text: '오늘 기분이 좋아 보여요. 좋았던 순간을 짧게 기록해보면 좋아요.' },
+    calm: { icon: '😐', label: '보통', text: '평온한 하루예요. 조용한 독서나 산책이 잘 맞아요.' },
+    sad: { icon: '😢', label: '속상', text: '속상한 마음이 있었나 봐요. 먼저 마음을 들어주는 시간이 필요해요.' },
+    tired: { icon: '😴', label: '피곤', text: '피곤함이 보여요. 오늘은 루틴을 줄이고 일찍 쉬는 걸 추천해요.' },
   };
 
   const schedule = [
     { group: '아침', icon: '☀️', items: [
       { time: '07:30', title: '기상하기', done: true },
       { time: '07:40', title: '양치하기', done: true },
-      { time: '08:20', title: '가방 챙기기', done: false }
+      { time: '08:20', title: '가방 챙기기', done: false },
     ]},
     { group: '오후', icon: '🏫', items: [
       { time: '15:00', title: '숙제하기', done: false },
-      { time: '16:00', title: '태권도 가기', done: false }
+      { time: '16:00', title: '태권도 가기', done: false },
     ]},
     { group: '저녁', icon: '🌙', items: [
       { time: '20:00', title: '독서 10분', done: false },
-      { time: '21:00', title: '잠자리 준비', done: false }
-    ]}
+      { time: '21:00', title: '잠자리 준비', done: false },
+    ]},
   ];
 
   const checkins = [
     { place: '학교', time: '08:34', status: '도착 확인' },
     { place: '태권도장', time: '16:02', status: '도착 확인' },
-    { place: '집', time: '17:21', status: '도착 예정' }
+    { place: '집', time: '17:21', status: '도착 예정' },
   ];
 
-  const pendingMissions = Object.entries(missionStatus).filter(([_, status]) => status === 'pending');
+  const pendingMissions = Object.entries(missionStatus).filter(([_, s]) => s === 'pending');
 
-  const Tori = () => (
-    <div style={{ width: 96, height: 96, margin: '0 auto', borderRadius: '50%', background: colors.blue, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>
-      🐘
+  const Tori = ({ small = false }) => (
+    <div style={{ width: small ? 72 : 128, height: small ? 72 : 128, position: 'relative', margin: small ? 0 : '0 auto' }}>
+      <div style={{ position: 'absolute', left: small ? 2 : 4, top: small ? 22 : 38, width: small ? 26 : 48, height: small ? 34 : 60, borderRadius: '50%', background: colors.blue, border: `2px solid ${colors.blueDark}`, transform: 'rotate(-18deg)' }} />
+      <div style={{ position: 'absolute', right: small ? 2 : 4, top: small ? 22 : 38, width: small ? 26 : 48, height: small ? 34 : 60, borderRadius: '50%', background: colors.blue, border: `2px solid ${colors.blueDark}`, transform: 'rotate(18deg)' }} />
+      <div style={{ position: 'absolute', left: small ? 14 : 27, top: small ? 12 : 24, width: small ? 44 : 74, height: small ? 48 : 78, borderRadius: '48% 48% 52% 52%', background: '#D8E8F3', border: `2.5px solid ${colors.blueDark}`, boxShadow: '0 18px 35px rgba(145,175,196,.22)' }}>
+        <div style={{ position: 'absolute', left: small ? 11 : 19, top: small ? 17 : 29, width: small ? 5 : 7, height: small ? 5 : 7, borderRadius: '50%', background: colors.text }} />
+        <div style={{ position: 'absolute', right: small ? 11 : 19, top: small ? 17 : 29, width: small ? 5 : 7, height: small ? 5 : 7, borderRadius: '50%', background: colors.text }} />
+        <div style={{ position: 'absolute', left: small ? 18 : 31, top: small ? 25 : 42, width: small ? 10 : 14, height: small ? 22 : 34, borderRadius: 12, background: '#BFD9EA', border: `2px solid ${colors.blueDark}` }} />
+        <div style={{ position: 'absolute', left: small ? 16 : 28, top: small ? 33 : 54, width: small ? 15 : 22, height: small ? 7 : 9, borderBottom: `2.5px solid ${colors.primary}`, borderRadius: '50%' }} />
+      </div>
+      <div style={{ position: 'absolute', right: small ? 4 : 8, top: small ? 2 : 6, fontSize: small ? 14 : 24 }}>✦</div>
     </div>
   );
 
   const Shell = ({ children, center = false }) => (
-    <div style={{
-      minHeight: '100vh', background: colors.bg, display: 'flex',
-      justifyContent: 'center', alignItems: center ? 'center' : 'flex-start',
-      padding: 20, boxSizing: 'border-box',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    }}>
-      <div style={{
-        width: '100%', maxWidth: 430, paddingBottom: center ? 0 : 90,
-        background: center ? colors.surface : 'transparent',
-        borderRadius: center ? 32 : 0, padding: center ? 30 : 0,
-        boxShadow: center ? '0 20px 60px rgba(90,70,45,.12)' : 'none',
-        border: center ? `1px solid ${colors.line}` : 'none',
-        textAlign: center ? 'center' : 'left'
-      }}>
+    <div style={{ minHeight: '100vh', background: colors.bg, display: 'flex', justifyContent: 'center', alignItems: center ? 'center' : 'flex-start', padding: 20, boxSizing: 'border-box', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+      <div style={{ width: '100%', maxWidth: 430, minHeight: center ? 'auto' : 'calc(100vh - 40px)', background: center ? colors.surface : 'transparent', borderRadius: center ? 34 : 0, padding: center ? 30 : 0, boxSizing: 'border-box', boxShadow: center ? '0 20px 60px rgba(90,70,45,.12)' : 'none', border: center ? `1px solid ${colors.line}` : 'none', textAlign: center ? 'center' : 'left', paddingBottom: center ? 30 : 90 }}>
         {children}
       </div>
     </div>
   );
 
   const Panel = ({ children, style = {} }) => (
-    <div style={{
-      background: colors.surface, border: `1px solid ${colors.line}`,
-      borderRadius: 26, padding: 18, marginBottom: 14,
-      boxShadow: '0 12px 32px rgba(90,70,45,.06)', ...style
-    }}>
+    <div style={{ background: colors.surface, borderRadius: 28, padding: 20, border: `1px solid ${colors.line}`, boxShadow: '0 14px 40px rgba(90,70,45,.07)', ...style }}>
       {children}
     </div>
   );
 
+  const Section = ({ title, caption, children }) => (
+    <section style={{ marginTop: 22 }}>
+      <h3 style={{ margin: 0, fontSize: 18, color: colors.text }}>{title}</h3>
+      {caption && <p style={{ margin: '5px 0 12px', fontSize: 13, color: colors.sub }}>{caption}</p>}
+      {children}
+    </section>
+  );
+
   const Button = ({ children, onClick, secondary = false }) => (
-    <button onClick={onClick} style={{
-      width: '100%', padding: 15, borderRadius: 17, marginTop: 10,
-      border: secondary ? `1px solid ${colors.line}` : 'none',
-      background: secondary ? colors.surface : colors.primary,
-      color: secondary ? colors.text : '#fff',
-      fontWeight: 850, fontSize: 15, cursor: 'pointer'
-    }}>
+    <button onClick={onClick} style={{ width: '100%', padding: 16, marginTop: 10, borderRadius: 18, border: secondary ? `1px solid ${colors.line}` : 'none', background: secondary ? colors.surface : colors.primary, color: secondary ? colors.text : '#fff', fontSize: 16, fontWeight: 850, cursor: 'pointer', boxShadow: secondary ? 'none' : '0 10px 25px rgba(217,140,95,.25)' }}>
       {children}
     </button>
   );
 
   const Input = ({ placeholder, type = 'text' }) => (
-    <input type={type} placeholder={placeholder} style={{
-      width: '100%', padding: 15, borderRadius: 17,
-      border: `1px solid ${colors.line}`, marginBottom: 10,
-      boxSizing: 'border-box', background: '#FFFCF8'
-    }} />
+    <input type={type} placeholder={placeholder} style={{ width: '100%', padding: '16px 17px', marginBottom: 12, borderRadius: 18, border: `1px solid ${colors.line}`, background: '#FFFCF8', fontSize: 15, boxSizing: 'border-box', outline: 'none', color: colors.text }} />
   );
 
   const Header = ({ title, sub }) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
       <div>
-        <div style={{ fontSize: 13, color: colors.sub, fontWeight: 800 }}>{sub}</div>
-        <h2 style={{ margin: '4px 0 0', color: colors.text }}>{title}</h2>
+        <div style={{ fontSize: 13, color: colors.sub, fontWeight: 750 }}>{sub}</div>
+        <h2 style={{ margin: '4px 0 0', color: colors.text, letterSpacing: '-.5px' }}>{title}</h2>
       </div>
       <div style={{ width: 42, height: 42, borderRadius: '50%', background: colors.surface, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${colors.line}` }}>🔔</div>
     </div>
   );
 
-  const changeMission = (title, next) => {
-    setMissionStatus(prev => ({ ...prev, [title]: next }));
-  };
+  const changeMission = (title, next) => setMissionStatus(prev => ({ ...prev, [title]: next }));
 
-  const getMissionButton = (title) => {
+  const statusButton = (title) => {
     const status = missionStatus[title] || 'none';
+    const base = { border: 'none', borderRadius: 999, padding: '8px 12px', fontWeight: 850, fontSize: 12 };
 
-    if (status === 'ready') {
-      return <button onClick={() => changeMission(title, 'doing')} style={pill(false)}>하기</button>;
-    }
-
-    if (status === 'doing') {
-      return <button onClick={() => changeMission(title, 'pending')} style={pill(false)}>완료했어요</button>;
-    }
-
-    if (status === 'pending') {
-      return <span style={pill(true)}>부모님 확인 중</span>;
-    }
-
-    if (status === 'approved') {
-      return <span style={pill(true)}>승인 완료</span>;
-    }
-
-    return <button style={pill(false)}>하기</button>;
+    if (status === 'ready') return <button onClick={() => changeMission(title, 'doing')} style={{ ...base, background: colors.primarySoft, color: colors.primary }}>하기</button>;
+    if (status === 'doing') return <button onClick={() => changeMission(title, 'pending')} style={{ ...base, background: colors.primary, color: '#fff' }}>완료했어요</button>;
+    if (status === 'pending') return <span style={{ ...base, background: '#EEF3EA', color: colors.green }}>확인 중</span>;
+    if (status === 'approved') return <span style={{ ...base, background: '#EEF3EA', color: colors.green }}>승인 완료</span>;
+    return <button style={{ ...base, background: colors.primarySoft, color: colors.primary }}>하기</button>;
   };
-
-  const pill = (done) => ({
-    border: 'none', borderRadius: 999, padding: '8px 12px',
-    background: done ? '#EEF3EA' : colors.primarySoft,
-    color: done ? colors.green : colors.primary,
-    fontWeight: 850, fontSize: 12, cursor: done ? 'default' : 'pointer'
-  });
 
   if (screen === 'start') return (
     <Shell center>
       <Tori />
-      <h1 style={{ fontSize: 38, marginBottom: 8 }}>Daily Kids</h1>
-      <p style={{ color: colors.sub, lineHeight: 1.6 }}>아이의 하루와 마음을<br />성장 데이터로 기록해요.</p>
+      <h1 style={{ margin: '18px 0 8px', fontSize: 38, color: colors.text, letterSpacing: '-1px' }}>Daily Kids</h1>
+      <p style={{ margin: '0 0 28px', color: colors.sub, lineHeight: 1.6 }}>아이의 작은 습관과 마음을<br />매일 성장 데이터로 기록해요.</p>
       <Button onClick={() => setScreen('select')}>시작하기</Button>
     </Shell>
   );
 
   if (screen === 'select') return (
     <Shell center>
-      <Tori />
-      <h2>누가 접속하나요?</h2>
-      <Button onClick={() => { setUserType('parent'); setScreen('login'); }}>부모님으로 시작하기</Button>
-      <Button secondary onClick={() => { setUserType('child'); setScreen('childLogin'); }}>아이로 시작하기</Button>
+      <Tori small />
+      <h2 style={{ color: colors.text }}>누가 접속하나요?</h2>
+      <p style={{ color: colors.sub }}>부모님과 아이 화면을 다르게 보여드려요.</p>
+      <Button onClick={() => { setUserType('parent'); setTab('home'); setScreen('login'); }}>부모님으로 시작하기</Button>
+      <Button secondary onClick={() => { setUserType('child'); setTab('home'); setScreen('childLogin'); }}>아이로 시작하기</Button>
     </Shell>
   );
 
   if (screen === 'login') return (
     <Shell center>
-      <Tori />
-      <h2>부모님 로그인</h2>
+      <Tori small />
+      <h2 style={{ color: colors.text }}>부모님 로그인</h2>
       <Input placeholder="이메일" />
       <Input placeholder="비밀번호" type="password" />
       <Button onClick={() => setScreen('app')}>로그인</Button>
+      <Button secondary onClick={() => setScreen('signup')}>회원가입</Button>
     </Shell>
   );
 
   if (screen === 'childLogin') return (
     <Shell center>
-      <Tori />
-      <h2>아이 접속</h2>
-      <Input placeholder="가족 코드" />
+      <Tori small />
+      <h2 style={{ color: colors.text }}>아이 접속</h2>
+      <p style={{ color: colors.sub }}>가족 코드나 PIN으로 간단히 접속해요.</p>
+      <Input placeholder="가족 코드 예: DK-2026" />
       <Input placeholder="아이 PIN 4자리" type="password" />
       <Button onClick={() => setScreen('app')}>아이 화면으로 들어가기</Button>
+      <Button secondary onClick={() => setScreen('select')}>뒤로</Button>
+    </Shell>
+  );
+
+  if (screen === 'signup') return (
+    <Shell center>
+      <Tori small />
+      <h2 style={{ color: colors.text }}>Daily Kids 시작하기</h2>
+      <Input placeholder="이메일" />
+      <Input placeholder="비밀번호" type="password" />
+      <Input placeholder="비밀번호 확인" type="password" />
+      <Button onClick={() => setScreen('parent')}>인증 메일 보내기</Button>
+    </Shell>
+  );
+
+  if (screen === 'parent') return (
+    <Shell center>
+      <Tori small />
+      <h2 style={{ color: colors.text }}>부모 프로필 설정</h2>
+      <Input placeholder="보호자 이름" />
+      <Input placeholder="아이와의 관계 예: 엄마, 아빠" />
+      <Button onClick={() => setScreen('child')}>다음</Button>
+    </Shell>
+  );
+
+  if (screen === 'child') return (
+    <Shell center>
+      <Tori small />
+      <h2 style={{ color: colors.text }}>아이 등록</h2>
+      <Input placeholder="아이 이름" />
+      <Input placeholder="생년월일 예: 2018.05.12" />
+      <Input placeholder="학교 단계 예: 유아 / 초등 / 중등" />
+      <Button onClick={() => { setUserType('parent'); setTab('home'); setScreen('app'); }}>우리 아이 루틴 만들기</Button>
     </Shell>
   );
 
   const ChildHome = () => (
     <>
       <Header title="좋은 아침, 도윤아" sub="Daily Kids" />
-      <Panel>
-        <Tori />
-        <h2 style={{ textAlign: 'center', marginBottom: 4 }}>토리 Lv.4</h2>
-        <p style={{ textAlign: 'center', color: colors.sub }}>미션을 완료하면 토리가 자라요.</p>
+      <Panel style={{ padding: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+          <Tori />
+          <div>
+            <div style={{ fontSize: 13, color: colors.sub, fontWeight: 800 }}>Tori Growth</div>
+            <h1 style={{ margin: '6px 0', fontSize: 30, color: colors.text }}>토리 Lv.4</h1>
+            <p style={{ margin: 0, color: colors.sub, fontSize: 14 }}>미션을 완료할수록 토리가 자라요.</p>
+          </div>
+        </div>
       </Panel>
 
-      <Panel>
-        <h3>오늘의 마음</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 8 }}>
-          {Object.entries(emotionMap).map(([key, value]) => (
-            <button key={key} onClick={() => setEmotion(key)} style={{
-              border: emotion === key ? `1.5px solid ${colors.primary}` : `1px solid ${colors.line}`,
-              background: emotion === key ? colors.primarySoft : colors.surface,
-              borderRadius: 16, padding: 10, cursor: 'pointer'
-            }}>
-              <div style={{ fontSize: 22 }}>{value[0]}</div>
-              <div style={{ fontSize: 11, color: colors.sub, fontWeight: 800 }}>{value[1]}</div>
-            </button>
+      <Section title="오늘의 마음" caption="감정 상태에 맞춰 AI 솔루션을 추천해요.">
+        <Panel>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+            {Object.entries(emotionMap).map(([key, value]) => (
+              <button key={key} onClick={() => setEmotion(key)} style={{ flex: 1, border: emotion === key ? `1.5px solid ${colors.primary}` : `1px solid ${colors.line}`, background: emotion === key ? colors.primarySoft : colors.surface, borderRadius: 18, padding: '12px 4px', cursor: 'pointer' }}>
+                <div style={{ fontSize: 22 }}>{value.icon}</div>
+                <div style={{ fontSize: 11, color: colors.sub, marginTop: 4, fontWeight: 800 }}>{value.label}</div>
+              </button>
+            ))}
+          </div>
+          <div style={{ background: colors.soft, borderRadius: 22, padding: 16 }}>
+            <div style={{ fontSize: 13, color: colors.primary, fontWeight: 900, marginBottom: 8 }}>AI 추천 솔루션</div>
+            <p style={{ margin: 0, color: colors.text, fontSize: 14, lineHeight: 1.65 }}>{emotionMap[emotion].text}</p>
+          </div>
+        </Panel>
+      </Section>
+
+      <Section title="맞춤 콘텐츠">
+        <div style={{ display: 'grid', gap: 12 }}>
+          {['토리와 3번 숨쉬기', '좋았던 일 3가지 말하기', '잠들기 전 가족 대화'].map(item => (
+            <Panel key={item} style={{ padding: 16, background: '#F4EEE6' }}>
+              <div style={{ fontWeight: 900, color: colors.text }}>{item}</div>
+              <div style={{ color: colors.sub, fontSize: 13, marginTop: 6 }}>3분 안에 시작할 수 있는 작은 활동이에요.</div>
+            </Panel>
           ))}
         </div>
-        <div style={{ marginTop: 14, background: colors.soft, padding: 14, borderRadius: 18 }}>
-          <b style={{ color: colors.primary }}>AI 추천</b>
-          <p style={{ marginBottom: 0, lineHeight: 1.6 }}>{emotionMap[emotion][2]}</p>
-        </div>
-      </Panel>
-
-      <Panel>
-        <h3>맞춤 콘텐츠</h3>
-        {['토리와 3번 숨쉬기', '좋았던 일 3가지 말하기', '잠들기 전 가족 대화'].map(item => (
-          <button key={item} onClick={() => alert(`${item}을 시작합니다.`)} style={{
-            width: '100%', textAlign: 'left', marginTop: 8, padding: 13,
-            border: `1px solid ${colors.line}`, borderRadius: 16,
-            background: '#FFFCF8', fontWeight: 800
-          }}>
-            {item}
-          </button>
-        ))}
-      </Panel>
+      </Section>
     </>
   );
 
@@ -240,25 +248,25 @@ export default function App() {
     <>
       <Header title="오늘의 생활계획표" sub="아이 화면" />
       {schedule.map(block => (
-        <Panel key={block.group}>
-          <h3>{block.icon} {block.group}</h3>
-          {block.items.map(item => (
-            <div key={item.title} style={{ display: 'flex', alignItems: 'center', borderTop: `1px solid ${colors.line}`, padding: '12px 0' }}>
+        <Panel key={block.group} style={{ marginBottom: 14 }}>
+          <div style={{ fontWeight: 900, color: colors.text, marginBottom: 12 }}>{block.icon} {block.group}</div>
+          {block.items.map((item, idx) => (
+            <div key={item.title} style={{ display: 'flex', alignItems: 'center', padding: idx === 0 ? '0 0 13px' : '13px 0', borderTop: idx === 0 ? 'none' : `1px solid ${colors.line}` }}>
               <div style={{ flex: 1 }}>
-                <b>{item.title}</b>
-                <div style={{ color: colors.sub, fontSize: 13 }}>{item.time}</div>
+                <div style={{ fontWeight: 850, color: colors.text }}>{item.title}</div>
+                <div style={{ fontSize: 13, color: colors.sub, marginTop: 3 }}>{item.time}</div>
               </div>
-              {item.done ? <span style={pill(true)}>완료</span> : getMissionButton(item.title)}
+              {item.done ? <span style={{ background: '#EEF3EA', color: colors.green, borderRadius: 999, padding: '8px 12px', fontSize: 12, fontWeight: 850 }}>완료</span> : statusButton(item.title)}
             </div>
           ))}
         </Panel>
       ))}
-
-      <Panel>
-        <h3>안심 체크인</h3>
-        <p style={{ color: colors.sub, lineHeight: 1.5 }}>학교·학원·집 등 지정 장소에 도착하면 부모님께 알림이 가요.</p>
-        <Button onClick={() => alert('현재 위치 기반 체크인은 실제 앱 단계에서 권한 동의 후 연결됩니다.')}>현재 위치 체크인</Button>
-      </Panel>
+      <Section title="안심 체크인" caption="학교·학원·집 등 지정 장소 도착을 확인해요.">
+        <Panel>
+          <p style={{ color: colors.sub, lineHeight: 1.6, marginTop: 0 }}>실시간 감시가 아니라 지정 장소 도착 여부만 확인하는 방식이에요.</p>
+          <Button onClick={() => alert('실제 앱 단계에서 위치 권한 동의 후 연결됩니다.')}>현재 위치 체크인</Button>
+        </Panel>
+      </Section>
     </>
   );
 
@@ -266,30 +274,31 @@ export default function App() {
     <>
       <Header title="도윤이 오늘 요약" sub="Parent Dashboard" />
       <Panel>
-        <h3>오늘 상태</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-          <div style={miniCard}>미션 성공률<br /><b>68%</b></div>
-          <div style={miniCard}>오늘 감정<br /><b>{emotionMap[emotion][0]} {emotionMap[emotion][1]}</b></div>
+        <h3 style={{ marginTop: 0 }}>오늘 상태</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div style={{ background: colors.soft, borderRadius: 20, padding: 16, color: colors.sub }}>미션 성공률<br /><b style={{ color: colors.text, fontSize: 24 }}>68%</b></div>
+          <div style={{ background: colors.soft, borderRadius: 20, padding: 16, color: colors.sub }}>오늘 감정<br /><b style={{ color: colors.text, fontSize: 24 }}>{emotionMap[emotion].icon}</b></div>
         </div>
       </Panel>
 
-      <Panel>
-        <h3>오늘의 추천</h3>
-        <p style={{ lineHeight: 1.6, color: colors.text }}>
-          도윤이의 오늘 감정은 <b>{emotionMap[emotion][1]}</b> 상태예요.  
-          오늘은 무리한 루틴보다 짧은 대화와 가벼운 활동을 추천해요.
-        </p>
-      </Panel>
+      <Section title="오늘의 추천" caption="오늘 바로 해볼 수 있는 행동 추천이에요.">
+        <Panel style={{ background: '#F4EEE6' }}>
+          <p style={{ margin: 0, lineHeight: 1.7, color: colors.text }}>
+            도윤이의 오늘 감정은 <b>{emotionMap[emotion].label}</b> 상태예요. 오늘은 무리한 루틴보다 짧은 대화와 가벼운 활동을 추천해요.
+          </p>
+        </Panel>
+      </Section>
 
-      <Panel>
-        <h3>안심 체크인</h3>
-        {checkins.map(item => (
-          <div key={item.place} style={{ display: 'flex', justifyContent: 'space-between', borderTop: `1px solid ${colors.line}`, padding: '12px 0' }}>
-            <div><b>{item.place}</b><div style={{ color: colors.sub, fontSize: 13 }}>{item.status}</div></div>
-            <b>{item.time}</b>
-          </div>
-        ))}
-      </Panel>
+      <Section title="안심 체크인">
+        <Panel>
+          {checkins.map((item, idx) => (
+            <div key={item.place} style={{ display: 'flex', justifyContent: 'space-between', padding: idx === 0 ? '0 0 13px' : '13px 0', borderTop: idx === 0 ? 'none' : `1px solid ${colors.line}` }}>
+              <div><b>{item.place}</b><div style={{ color: colors.sub, fontSize: 13 }}>{item.status}</div></div>
+              <b>{item.time}</b>
+            </div>
+          ))}
+        </Panel>
+      </Section>
     </>
   );
 
@@ -297,21 +306,21 @@ export default function App() {
     <>
       <Header title="주간 리포트" sub="Parent Dashboard" />
       <Panel>
-        <h3>미션 성공 그래프</h3>
+        <h3 style={{ marginTop: 0 }}>미션 성공 그래프</h3>
         {['월','화','수','목','금','토','일'].map((d, i) => (
-          <div key={d} style={{ marginBottom: 10 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}><span>{d}</span><b>{55 + i * 6}%</b></div>
-            <div style={{ height: 9, background: colors.soft, borderRadius: 999 }}>
+          <div key={d} style={{ marginBottom: 12 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: colors.sub }}><span>{d}</span><b>{55 + i * 6}%</b></div>
+            <div style={{ height: 9, background: colors.soft, borderRadius: 999, marginTop: 5 }}>
               <div style={{ width: `${55 + i * 6}%`, height: '100%', background: colors.primary, borderRadius: 999 }} />
             </div>
           </div>
         ))}
       </Panel>
-
-      <Panel>
-        <h3>AI 패턴 코멘트</h3>
-        <p style={{ lineHeight: 1.6 }}>최근 오후 루틴 완료율이 낮아요. 학원 이후 피로도가 높을 수 있어 저녁 루틴을 1개 줄이는 것을 추천해요.</p>
-      </Panel>
+      <Section title="AI 패턴 코멘트">
+        <Panel>
+          <p style={{ margin: 0, lineHeight: 1.7 }}>최근 오후 루틴 완료율이 낮아요. 학원 이후 피로도가 높을 수 있어 저녁 루틴을 1개 줄이는 것을 추천해요.</p>
+        </Panel>
+      </Section>
     </>
   );
 
@@ -319,15 +328,15 @@ export default function App() {
     <>
       <Header title="승인 대기" sub="Parent Dashboard" />
       <Panel>
-        <h3>미션 완료 요청</h3>
+        <h3 style={{ marginTop: 0 }}>미션 완료 요청</h3>
         {pendingMissions.length === 0 && <p style={{ color: colors.sub }}>현재 승인 대기 중인 미션이 없어요.</p>}
         {pendingMissions.map(([title]) => (
           <div key={title} style={{ borderTop: `1px solid ${colors.line}`, padding: '14px 0' }}>
             <b>{title}</b>
             <p style={{ color: colors.sub, fontSize: 13 }}>도윤이가 완료했다고 요청했어요.</p>
             <div style={{ display: 'flex', gap: 8 }}>
-              <button onClick={() => changeMission(title, 'approved')} style={{ ...pill(false), background: colors.primary, color: '#fff' }}>승인</button>
-              <button onClick={() => changeMission(title, 'ready')} style={pill(false)}>반려</button>
+              <button onClick={() => changeMission(title, 'approved')} style={{ border: 'none', background: colors.primary, color: '#fff', borderRadius: 999, padding: '9px 14px', fontWeight: 850 }}>승인</button>
+              <button onClick={() => changeMission(title, 'ready')} style={{ border: 'none', background: colors.primarySoft, color: colors.primary, borderRadius: 999, padding: '9px 14px', fontWeight: 850 }}>반려</button>
             </div>
           </div>
         ))}
@@ -338,55 +347,32 @@ export default function App() {
   const ParentGift = () => (
     <>
       <Header title="선물" sub="Parent Dashboard" />
-      <Panel>
-        <h3>보상 추천</h3>
+      <Section title="보상 추천" caption="미션 달성률에 맞춰 선물을 추천해요.">
         {['편의점 아이스크림 쿠폰', '어린이 도서 쿠폰', '문구 세트'].map(item => (
-          <button key={item} onClick={() => alert(`${item} 선물 기능은 추후 쇼핑몰/e쿠폰 연동 예정입니다.`)} style={{
-            width: '100%', textAlign: 'left', padding: 14, borderRadius: 18,
-            border: `1px solid ${colors.line}`, background: '#FFFCF8', marginTop: 10, fontWeight: 850
-          }}>
-            🎁 {item}
-          </button>
+          <Panel key={item} style={{ padding: 16, marginBottom: 12 }}>
+            <div style={{ fontWeight: 900 }}>🎁 {item}</div>
+            <div style={{ color: colors.sub, fontSize: 13, marginTop: 6 }}>추후 쇼핑몰/e쿠폰몰 연동 예정</div>
+          </Panel>
         ))}
-      </Panel>
+      </Section>
     </>
   );
-
-  const miniCard = {
-    background: colors.soft, borderRadius: 18, padding: 14,
-    color: colors.sub, lineHeight: 1.7
-  };
 
   const Placeholder = ({ title }) => (
     <>
       <Header title={title} sub={userType === 'parent' ? 'Parent Dashboard' : 'Daily Kids'} />
-      <Panel><Tori /><p style={{ textAlign: 'center', color: colors.sub }}>준비 중인 화면이에요.</p></Panel>
+      <Panel><Tori small /><p style={{ textAlign: 'center', color: colors.sub }}>준비 중인 화면이에요.</p></Panel>
     </>
   );
 
   const navs = userType === 'parent'
-    ? [
-      ['home', '홈'], ['report', '리포트'], ['approve', '승인'], ['gift', '선물'], ['setting', '설정']
-    ]
-    : [
-      ['home', '홈'], ['plan', '계획'], ['money', '용돈'], ['book', '독서'], ['tori', '토리']
-    ];
+    ? [['home','홈'], ['report','리포트'], ['approve','승인'], ['gift','선물'], ['setting','설정']]
+    : [['home','홈'], ['plan','계획'], ['money','용돈'], ['book','독서'], ['tori','토리']];
 
   const BottomNav = () => (
-    <div style={{
-      position: 'fixed', left: '50%', bottom: 14, transform: 'translateX(-50%)',
-      width: 'calc(100% - 32px)', maxWidth: 430,
-      background: 'rgba(255,255,255,.94)', border: `1px solid ${colors.line}`,
-      borderRadius: 24, padding: 8, display: 'grid',
-      gridTemplateColumns: 'repeat(5,1fr)', boxShadow: '0 16px 45px rgba(90,70,45,.16)'
-    }}>
+    <div style={{ position: 'fixed', left: '50%', bottom: 14, transform: 'translateX(-50%)', width: 'calc(100% - 32px)', maxWidth: 430, background: 'rgba(255,255,255,.94)', border: `1px solid ${colors.line}`, borderRadius: 24, padding: 8, display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', boxShadow: '0 16px 45px rgba(90,70,45,.16)', backdropFilter: 'blur(12px)' }}>
       {navs.map(([key, label]) => (
-        <button key={key} onClick={() => setTab(key)} style={{
-          border: 'none', borderRadius: 17, padding: '10px 0',
-          background: tab === key ? colors.primarySoft : 'transparent',
-          color: tab === key ? colors.primary : colors.sub,
-          fontWeight: 900, cursor: 'pointer'
-        }}>
+        <button key={key} onClick={() => setTab(key)} style={{ border: 'none', borderRadius: 17, padding: '10px 0', background: tab === key ? colors.primarySoft : 'transparent', color: tab === key ? colors.primary : colors.sub, fontWeight: 900, fontSize: 13, cursor: 'pointer' }}>
           {label}
         </button>
       ))}
