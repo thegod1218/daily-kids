@@ -152,9 +152,9 @@ export default function HomePage() {
            className="avatar" 
            onClick={() => setShowGallery(true)}
     style={{
-      width: 52,
-      height: 52,
-      minWidth: 52,
+      width: 44,
+      height: 44,
+      minWidth: 44,
       borderRadius: '50%',
       background: '#F7E6DD',
       display: 'flex',
