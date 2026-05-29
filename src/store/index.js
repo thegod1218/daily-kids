@@ -162,11 +162,11 @@ export const useAppStore = create(
       },
 
       // 감정 기록
-      logMood: (type) => {
+      logMood: (type, note = '') => {
         const today = dayjs().format('YYYY-MM-DD')
         const s = get()
         const filtered = s.moodLogs.filter(m => m.date !== today)
-        set({ moodLogs: [{ date: today, type }, ...filtered] })
+        set({ moodLogs: [{ date: today, type, note }, ...filtered] })
       },
 
       // 용돈 내역 추가

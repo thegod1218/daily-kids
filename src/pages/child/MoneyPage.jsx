@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useAppStore } from '../../store'
 import { useToast } from '../../hooks/useToast'
 import TabBar from '../../components/TabBar'
-import { Sheet, ProgressBar, EmptyState } from '../../components/Common'
+import { Sheet, ProgBar, Empty } from '../../components/Common'
 
 export default function MoneyPage() {
   const { moneyLogs, piggies, addMoneyLog, addPiggy } = useAppStore()
@@ -97,7 +97,7 @@ export default function MoneyPage() {
                     <div className="row"><span style={{ fontSize: 18 }}>🐷</span><span style={{ fontSize: 14, fontWeight: 500, color: '#2C2C2A' }}>{p.name}</span></div>
                     <span className={`chip ${isSelected ? 'chip-p' : 'chip-g'}`}>{pct}%</span>
                   </div>
-                  <ProgressBar value={pct} color={isSelected ? '#7F77DD' : '#1D9E75'} style={{ marginBottom: 6 }} />
+                  <ProgBar value={pct} color={isSelected ? '#7F77DD' : '#1D9E75'} style={{ marginBottom: 6 }} />
                   <div style={{ fontSize: 12, color: '#888780' }}>{p.current.toLocaleString('ko-KR')}원 / {p.target.toLocaleString('ko-KR')}원 · {(p.target - p.current).toLocaleString('ko-KR')}원 남음</div>
                 </div>
               )
@@ -117,7 +117,7 @@ export default function MoneyPage() {
             )}
           </>
         ) : (
-          <EmptyState emoji="🐷" message="저금통을 추가해봐요" />
+          <Empty emoji="🐷" message="저금통을 추가해봐요" />
         )}
 
         {/* 최근 내역 */}

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '../../store'
 import { useToast } from '../../hooks/useToast'
 import TabBar from '../../components/TabBar'
-import { Sheet, ProgressBar } from '../../components/Common'
+import { Sheet, ProgBar } from '../../components/Common'
 import dayjs from 'dayjs'
 
 const MOOD_ICON = { happy: '😊', neutral: '😐', sad: '😢', angry: '😠', excited: '🤩' }
@@ -166,7 +166,7 @@ export default function ParentDashboard() {
               <span style={{ fontSize: 15, fontWeight: 500, color: '#27500A' }}>🐷 {mainPiggy.name} 목표</span>
               <span className="chip chip-g">{piggyPct}%</span>
             </div>
-            <ProgressBar value={piggyPct} color="#1D9E75" style={{ marginBottom: 6 }} />
+            <ProgBar value={piggyPct} color="#1D9E75" style={{ marginBottom: 6 }} />
             <div style={{ fontSize: 12, color: '#27500A', marginBottom: 14 }}>
               {mainPiggy.current.toLocaleString('ko-KR')}원 / {mainPiggy.target.toLocaleString('ko-KR')}원
             </div>
@@ -207,7 +207,7 @@ export default function ParentDashboard() {
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 13, color: '#444441', marginBottom: 4 }}>{m.title}</div>
-                <ProgressBar value={m.done ? 100 : 0} color={m.done ? '#1D9E75' : '#D3D1C7'} />
+                <ProgBar value={m.done ? 100 : 0} color={m.done ? '#1D9E75' : '#D3D1C7'} />
               </div>
               <span style={{ fontSize: 12, fontWeight: 500, color: m.done ? '#1D9E75' : '#B4B2A9' }}>{m.done ? '완료' : '대기'}</span>
             </div>
@@ -224,7 +224,7 @@ export default function ParentDashboard() {
               <span style={{ fontSize: 14, fontWeight: 500, color: '#27500A' }}>{mainPiggy.name}</span>
               <span className="chip chip-g">{piggyPct}%</span>
             </div>
-            <ProgressBar value={piggyPct} color="#1D9E75" />
+            <ProgBar value={piggyPct} color="#1D9E75" />
           </div>
         )}
         <div style={{ fontSize: 14, fontWeight: 500, color: '#2C2C2A', marginBottom: 10 }}>바로 쇼핑하기</div>
