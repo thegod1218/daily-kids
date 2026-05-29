@@ -5,8 +5,7 @@ import { useAppStore } from '../../store'
 import { useToast } from '../../hooks/useToast'
 import TabBar from '../../components/TabBar'
 import { ProgBar } from '../../components/Common'
-import dayjs from 'dayjs'
-import elephantImg from '../../assets/elephant.png'
+
 
 const MOODS = [
   { type: 'happy', e: '😊', label: '행복' },
@@ -62,12 +61,12 @@ export default function HomePage() {
     if (selectedCharacter === 'elephant') {
       return (
         <img
-          src={elephantImg}
-          alt="토리"
-          style={{
-            width: size,
-            height: size,
-            objectFit: 'contain'
+         src="/elephant.png"
+        alt=""
+        style={{
+          width: size,
+          height: size,
+          objectFit: 'contain'
           }}
         />
       )
