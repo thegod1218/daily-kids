@@ -22,17 +22,19 @@ export default function App() {
   ]);
 
   const colors = {
-    bg: '#FAF7F2',
-    surface: '#FFFFFF',
-    soft: '#F8F2EA',
-    primary: '#D98C5F',
-    primarySoft: '#F4DFD0',
-    blue: '#C8D9E6',
-    blueDark: '#91AFC4',
-    text: '#232323',
-    sub: '#7A756F',
-    line: '#E8DED2',
-    green: '#9BAF92',
+    bg: '#F7F3EE',
+    surface: '#FFFDF9',
+    soft: '#F8EFE8',
+    accent: '#D28A6A',
+    accentDeep: '#B96E4E',
+    accentSoft: '#F7E6DD',
+    text: '#2C2926',
+    sub: '#7C746D',
+    line: '#E6DDD3',
+    green: '#8FA982',
+    greenSoft: '#EEF3EA',
+    blue: '#D7E3EA',
+    blueDeep: '#9CB4C2',
   };
 
   const emotionMap = {
@@ -49,14 +51,14 @@ export default function App() {
   ];
 
   const ageLimits = {
-    preschool: { label: '유아', max: 30, guide: '한 문장' },
-    lower: { label: '저학년', max: 100, guide: '50~100자' },
-    upper: { label: '고학년', max: 300, guide: '150~300자' },
-    middle: { label: '중등', max: 600, guide: '300~600자' },
+    preschool: { label: '유아', max: 30 },
+    lower: { label: '저학년', max: 100 },
+    upper: { label: '고학년', max: 300 },
+    middle: { label: '중등', max: 600 },
   };
 
   const communityPosts = [
-    { category: '식사', title: '오늘 밥을 너무 잘 먹었어요 😊', body: '계란찜이랑 소고기무국 해줬더니 평소보다 잘 먹네요.', comments: ['오 어떤 메뉴 해주셨어요?', '소고기무국 좋네요!'] },
+    { category: '식사', title: '오늘 밥을 너무 잘 먹었어요', body: '계란찜이랑 소고기무국 해줬더니 평소보다 잘 먹네요.', comments: ['오 어떤 메뉴 해주셨어요?', '소고기무국 좋네요!'] },
     { category: '수면', title: '잠들기 전 루틴 뭐 하세요?', body: '요즘 잠드는 시간이 늦어져서 독서 루틴 고민 중이에요.', comments: ['저희는 조명 낮추고 책 읽어요.', '따뜻한 물도 도움 됐어요.'] },
   ];
 
@@ -66,81 +68,220 @@ export default function App() {
   const planRate = Math.round((donePlans / plans.length) * 100);
   const stars = donePlans;
   const growth = Math.min(100, 45 + donePlans * 8);
-  const todayGoal = plans.find((p) => p.status === 'ready' || p.status === 'doing' || p.status === 'pending') || plans[0];
+  const todayGoal = plans.find((p) => ['ready', 'doing', 'pending'].includes(p.status)) || plans[0];
 
   const updatePlanStatus = (title, status) => {
     setPlans((prev) => prev.map((p) => (p.title === title ? { ...p, status } : p)));
   };
 
-  const groupedPlans = ['아침', '오후', '저녁'].map((group) => ({
-    group,
-    icon: plans.find((p) => p.group === group)?.icon,
-    items: plans.filter((p) => p.group === group),
-  }));
-
   const Tori = ({ small = false }) => (
-    <div style={{ width: small ? 72 : 128, height: small ? 72 : 128, position: 'relative', margin: small ? 0 : '0 auto' }}>
-      <div style={{ position: 'absolute', left: small ? 2 : 4, top: small ? 22 : 38, width: small ? 26 : 48, height: small ? 34 : 60, borderRadius: '50%', background: colors.blue, border: `2px solid ${colors.blueDark}`, transform: 'rotate(-18deg)' }} />
-      <div style={{ position: 'absolute', right: small ? 2 : 4, top: small ? 22 : 38, width: small ? 26 : 48, height: small ? 34 : 60, borderRadius: '50%', background: colors.blue, border: `2px solid ${colors.blueDark}`, transform: 'rotate(18deg)' }} />
-      <div style={{ position: 'absolute', left: small ? 14 : 27, top: small ? 12 : 24, width: small ? 44 : 74, height: small ? 48 : 78, borderRadius: '48% 48% 52% 52%', background: '#D8E8F3', border: `2.5px solid ${colors.blueDark}` }}>
-        <div style={{ position: 'absolute', left: small ? 11 : 19, top: small ? 17 : 29, width: 6, height: 6, borderRadius: '50%', background: colors.text }} />
-        <div style={{ position: 'absolute', right: small ? 11 : 19, top: small ? 17 : 29, width: 6, height: 6, borderRadius: '50%', background: colors.text }} />
-        <div style={{ position: 'absolute', left: small ? 18 : 31, top: small ? 25 : 42, width: small ? 10 : 14, height: small ? 22 : 34, borderRadius: 12, background: '#BFD9EA', border: `2px solid ${colors.blueDark}` }} />
-        <div style={{ position: 'absolute', left: small ? 16 : 28, top: small ? 33 : 54, width: small ? 15 : 22, height: 8, borderBottom: `2.5px solid ${colors.primary}`, borderRadius: '50%' }} />
+    <div style={{
+      width: small ? 64 : 104,
+      height: small ? 64 : 104,
+      position: 'relative',
+      flexShrink: 0,
+      margin: small ? 0 : '0 auto',
+    }}>
+      <div style={{
+        position: 'absolute',
+        left: small ? 3 : 4,
+        top: small ? 22 : 34,
+        width: small ? 24 : 40,
+        height: small ? 30 : 52,
+        borderRadius: '50%',
+        background: colors.blue,
+        border: `1.5px solid ${colors.blueDeep}`,
+        transform: 'rotate(-16deg)',
+      }} />
+      <div style={{
+        position: 'absolute',
+        right: small ? 3 : 4,
+        top: small ? 22 : 34,
+        width: small ? 24 : 40,
+        height: small ? 30 : 52,
+        borderRadius: '50%',
+        background: colors.blue,
+        border: `1.5px solid ${colors.blueDeep}`,
+        transform: 'rotate(16deg)',
+      }} />
+      <div style={{
+        position: 'absolute',
+        left: small ? 13 : 24,
+        top: small ? 12 : 20,
+        width: small ? 40 : 58,
+        height: small ? 44 : 64,
+        borderRadius: '48% 48% 52% 52%',
+        background: '#E3EEF4',
+        border: `2px solid ${colors.blueDeep}`,
+      }}>
+        <div style={{ position: 'absolute', left: small ? 10 : 15, top: small ? 16 : 24, width: 5, height: 5, borderRadius: '50%', background: colors.text }} />
+        <div style={{ position: 'absolute', right: small ? 10 : 15, top: small ? 16 : 24, width: 5, height: 5, borderRadius: '50%', background: colors.text }} />
+        <div style={{
+          position: 'absolute',
+          left: small ? 17 : 25,
+          top: small ? 24 : 35,
+          width: small ? 9 : 11,
+          height: small ? 20 : 26,
+          borderRadius: 12,
+          background: '#CADDE8',
+          border: `1.5px solid ${colors.blueDeep}`,
+        }} />
+        <div style={{
+          position: 'absolute',
+          left: small ? 15 : 22,
+          top: small ? 32 : 45,
+          width: small ? 14 : 18,
+          height: 7,
+          borderBottom: `2px solid ${colors.accent}`,
+          borderRadius: '50%',
+        }} />
       </div>
-      <div style={{ position: 'absolute', right: 8, top: 4, fontSize: small ? 14 : 24 }}>✦</div>
+      <div style={{ position: 'absolute', right: small ? 3 : 6, top: small ? 0 : 2, fontSize: small ? 12 : 18, color: colors.accentDeep }}>✦</div>
     </div>
   );
 
   const Shell = ({ children, center = false }) => (
-    <div style={{ minHeight: '100vh', background: colors.bg, display: 'flex', justifyContent: 'center', alignItems: center ? 'center' : 'flex-start', padding: 20, boxSizing: 'border-box', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-      <div style={{ width: '100%', maxWidth: 430, background: center ? colors.surface : 'transparent', borderRadius: center ? 34 : 0, padding: center ? 30 : 0, boxSizing: 'border-box', boxShadow: center ? '0 20px 60px rgba(90,70,45,.12)' : 'none', border: center ? `1px solid ${colors.line}` : 'none', textAlign: center ? 'center' : 'left', paddingBottom: center ? 30 : 96 }}>
+    <div style={{
+      minHeight: '100vh',
+      background: colors.bg,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: center ? 'center' : 'flex-start',
+      padding: 20,
+      boxSizing: 'border-box',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    }}>
+      <div style={{
+        width: '100%',
+        maxWidth: 430,
+        background: center ? colors.surface : 'transparent',
+        borderRadius: center ? 32 : 0,
+        padding: center ? 30 : 0,
+        boxSizing: 'border-box',
+        boxShadow: center ? '0 18px 48px rgba(80,60,40,.08)' : 'none',
+        border: center ? `1px solid ${colors.line}` : 'none',
+        textAlign: center ? 'center' : 'left',
+        paddingBottom: center ? 30 : 96,
+      }}>
         {children}
       </div>
     </div>
   );
 
   const Panel = ({ children, style = {} }) => (
-    <div style={{ background: colors.surface, borderRadius: 28, padding: 20, border: `1px solid ${colors.line}`, boxShadow: '0 14px 40px rgba(90,70,45,.07)', ...style }}>{children}</div>
+    <div style={{
+      background: colors.surface,
+      borderRadius: 28,
+      padding: 20,
+      border: `1px solid ${colors.line}`,
+      boxShadow: '0 8px 24px rgba(80,60,40,.06)',
+      ...style,
+    }}>
+      {children}
+    </div>
   );
 
   const Section = ({ title, caption, children }) => (
-    <section style={{ marginTop: 22 }}>
-      <h3 style={{ margin: 0, fontSize: 18, color: colors.text }}>{title}</h3>
-      {caption && <p style={{ margin: '5px 0 12px', fontSize: 13, color: colors.sub }}>{caption}</p>}
+    <section style={{ marginTop: 24 }}>
+      <h3 style={{ margin: 0, fontSize: 18, fontWeight: 750, color: colors.text }}>{title}</h3>
+      {caption && <p style={{ margin: '5px 0 12px', fontSize: 13, lineHeight: 1.45, color: colors.sub }}>{caption}</p>}
       {children}
     </section>
   );
 
   const Button = ({ children, onClick, secondary = false }) => (
-    <button onClick={onClick} style={{ width: '100%', padding: 16, marginTop: 10, borderRadius: 18, border: secondary ? `1px solid ${colors.line}` : 'none', background: secondary ? colors.surface : colors.primary, color: secondary ? colors.text : '#fff', fontSize: 16, fontWeight: 850, cursor: 'pointer' }}>{children}</button>
+    <button onClick={onClick} style={{
+      width: '100%',
+      padding: 16,
+      marginTop: 10,
+      borderRadius: 18,
+      border: secondary ? `1px solid ${colors.line}` : 'none',
+      background: secondary ? colors.surface : colors.accentDeep,
+      color: secondary ? colors.text : '#fff',
+      fontSize: 15,
+      fontWeight: 750,
+      cursor: 'pointer',
+    }}>
+      {children}
+    </button>
   );
 
   const Input = ({ placeholder, type = 'text' }) => (
-    <input type={type} placeholder={placeholder} style={{ width: '100%', padding: '16px 17px', marginBottom: 12, borderRadius: 18, border: `1px solid ${colors.line}`, background: '#FFFCF8', fontSize: 15, boxSizing: 'border-box', outline: 'none', color: colors.text }} />
+    <input type={type} placeholder={placeholder} style={{
+      width: '100%',
+      padding: '16px 17px',
+      marginBottom: 12,
+      borderRadius: 18,
+      border: `1px solid ${colors.line}`,
+      background: '#FFFCF8',
+      fontSize: 15,
+      boxSizing: 'border-box',
+      outline: 'none',
+      color: colors.text,
+    }} />
   );
 
   const TextArea = ({ value, onChange, placeholder, maxLength }) => (
-    <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} maxLength={maxLength} style={{ width: '100%', minHeight: 96, padding: 16, borderRadius: 20, border: `1px solid ${colors.line}`, background: '#FFFCF8', boxSizing: 'border-box', resize: 'none', outline: 'none', fontSize: 14, lineHeight: 1.6, color: colors.text }} />
+    <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} maxLength={maxLength} style={{
+      width: '100%',
+      minHeight: 94,
+      padding: 0,
+      border: 'none',
+      background: 'transparent',
+      boxSizing: 'border-box',
+      resize: 'none',
+      outline: 'none',
+      fontSize: 15,
+      lineHeight: 1.65,
+      color: colors.text,
+    }} />
   );
 
   const Header = ({ title, sub }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
       <div>
-        <div style={{ fontSize: 13, color: colors.sub, fontWeight: 750 }}>{sub}</div>
-        <h2 style={{ margin: '4px 0 0', color: colors.text }}>{title}</h2>
+        <div style={{ fontSize: 12, color: colors.sub, fontWeight: 750, letterSpacing: '.2px' }}>{sub}</div>
+        <h2 style={{ margin: '4px 0 0', color: colors.text, fontSize: 24, fontWeight: 760, letterSpacing: '-.5px' }}>{title}</h2>
       </div>
-      <div style={{ width: 42, height: 42, borderRadius: '50%', background: colors.surface, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${colors.line}` }}>🔔</div>
+      <div style={{
+        width: 42,
+        height: 42,
+        borderRadius: '50%',
+        background: colors.surface,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: `1px solid ${colors.line}`,
+        color: colors.sub,
+        fontSize: 18,
+      }}>◦</div>
     </div>
   );
 
-  const statusButton = (plan) => {
-    const base = { border: 'none', borderRadius: 999, padding: '9px 14px', fontWeight: 850, fontSize: 13, cursor: 'pointer' };
+  const smallButton = {
+    border: 'none',
+    background: colors.accentDeep,
+    color: '#fff',
+    borderRadius: 999,
+    padding: '8px 15px',
+    fontWeight: 750,
+    cursor: 'pointer',
+  };
 
-    if (plan.status === 'ready') return <button onClick={() => updatePlanStatus(plan.title, 'doing')} style={{ ...base, background: colors.primarySoft, color: colors.primary }}>시작</button>;
-    if (plan.status === 'doing') return <button onClick={() => { updatePlanStatus(plan.title, 'pending'); setFeedback('잘했어! 부모님 확인을 기다리고 있어 ⭐'); }} style={{ ...base, background: colors.primary, color: '#fff' }}>완료</button>;
-    if (plan.status === 'pending') return <span style={{ ...base, background: '#EEF3EA', color: colors.green, cursor: 'default' }}>확인 중</span>;
-    if (plan.status === 'approved') return <span style={{ ...base, background: '#EEF3EA', color: colors.green, cursor: 'default' }}>완료</span>;
+  const statusButton = (plan) => {
+    const base = {
+      border: 'none',
+      borderRadius: 999,
+      padding: '9px 15px',
+      fontWeight: 750,
+      fontSize: 13,
+      cursor: 'pointer',
+    };
+
+    if (plan.status === 'ready') return <button onClick={() => updatePlanStatus(plan.title, 'doing')} style={{ ...base, background: colors.accentSoft, color: colors.accentDeep }}>시작</button>;
+    if (plan.status === 'doing') return <button onClick={() => { updatePlanStatus(plan.title, 'pending'); setFeedback('잘했어. 부모님 확인을 기다리고 있어요.'); }} style={{ ...base, background: colors.accentDeep, color: '#fff' }}>완료</button>;
+    if (plan.status === 'pending') return <span style={{ ...base, background: colors.greenSoft, color: colors.green, cursor: 'default' }}>확인 중</span>;
+    if (plan.status === 'approved') return <span style={{ ...base, background: colors.greenSoft, color: colors.green, cursor: 'default' }}>완료</span>;
   };
 
   if (screen === 'start') return (
@@ -218,32 +359,41 @@ export default function App() {
     <>
       <Header title="오늘 뭐 해볼까?" sub="Daily Kids" />
 
-      <Panel style={{ padding: 24, background: '#F4EEE6' }}>
+      <Panel style={{ padding: 24, background: colors.surface }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
           <Tori small />
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, color: colors.sub, fontWeight: 800 }}>오늘의 목표</div>
-            <h1 style={{ margin: '6px 0', fontSize: 28, color: colors.text }}>{todayGoal.title}</h1>
-            <p style={{ margin: 0, color: colors.sub, fontSize: 14 }}>{todayGoal.time}</p>
+            <div style={{ fontSize: 12, color: colors.sub, fontWeight: 750, marginBottom: 4 }}>오늘의 목표</div>
+            <h1 style={{ margin: 0, fontSize: 27, fontWeight: 780, color: colors.text, letterSpacing: '-.6px' }}>{todayGoal.title}</h1>
+            <p style={{ margin: '6px 0 0', color: colors.sub, fontSize: 14 }}>{todayGoal.time}</p>
           </div>
           {statusButton(todayGoal)}
         </div>
       </Panel>
 
       {feedback && (
-        <div style={{ marginTop: 14, background: colors.primary, color: '#fff', borderRadius: 22, padding: 14, fontWeight: 850, textAlign: 'center' }}>
+        <div style={{
+          marginTop: 14,
+          background: colors.accentDeep,
+          color: '#fff',
+          borderRadius: 22,
+          padding: 14,
+          fontWeight: 750,
+          textAlign: 'center',
+          fontSize: 14,
+        }}>
           {feedback}
         </div>
       )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 16 }}>
         <button onClick={() => setTab('plan')} style={bigCardStyle(colors)}>
-          <div style={{ fontSize: 30 }}>🗓️</div>
+          <div style={iconCircle(colors)}>⌑</div>
           <b>계획</b>
-          <span>할 일 보기</span>
+          <span>오늘 할 일 보기</span>
         </button>
         <button onClick={() => setTab('tori')} style={bigCardStyle(colors)}>
-          <div style={{ fontSize: 30 }}>🐘</div>
+          <div style={iconCircle(colors)}>✦</div>
           <b>토리</b>
           <span>별 {stars}개</span>
         </button>
@@ -253,22 +403,28 @@ export default function App() {
         <Panel>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 8 }}>
             {Object.entries(emotionMap).map(([key, value]) => (
-              <button key={key} onClick={() => setEmotion(key)} style={{ border: emotion === key ? `1.5px solid ${colors.primary}` : `1px solid ${colors.line}`, background: emotion === key ? colors.primarySoft : colors.surface, borderRadius: 18, padding: '12px 4px' }}>
+              <button key={key} onClick={() => setEmotion(key)} style={{
+                border: emotion === key ? `1.5px solid ${colors.accent}` : `1px solid ${colors.line}`,
+                background: emotion === key ? colors.accentSoft : colors.surface,
+                borderRadius: 18,
+                padding: '12px 4px',
+                cursor: 'pointer',
+              }}>
                 <div style={{ fontSize: 22 }}>{value.icon}</div>
-                <div style={{ fontSize: 11, color: colors.sub, fontWeight: 800 }}>{value.label}</div>
+                <div style={{ fontSize: 11, color: colors.sub, fontWeight: 750, marginTop: 4 }}>{value.label}</div>
               </button>
             ))}
           </div>
-          <p style={{ color: colors.text, lineHeight: 1.6, marginBottom: 0 }}>{currentEmotion.text}</p>
+          <p style={{ color: colors.text, lineHeight: 1.6, margin: '16px 0 0', fontSize: 14 }}>{currentEmotion.text}</p>
         </Panel>
       </Section>
 
       <Section title="짧은 일기">
         <Panel>
           <TextArea value={diary} onChange={setDiary} placeholder="오늘 좋았던 일을 한 줄만 적어봐요." maxLength={120} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, fontSize: 12, color: colors.sub }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, fontSize: 12, color: colors.sub }}>
             <span>{diary.length}/120자</span>
-            <button onClick={() => alert('일기가 저장되었어요.')} style={smallButton(colors)}>저장</button>
+            <button onClick={() => alert('일기가 저장되었어요.')} style={smallButton}>저장</button>
           </div>
         </Panel>
       </Section>
@@ -278,12 +434,11 @@ export default function App() {
   const ChildPlan = () => (
     <>
       <Header title="생활계획표" sub="오늘의 계획" />
-
       <Panel style={{ padding: 24, marginBottom: 14 }}>
-        <div style={{ color: colors.sub, fontSize: 13, fontWeight: 800 }}>오늘 진행률</div>
+        <div style={{ color: colors.sub, fontSize: 13, fontWeight: 750 }}>오늘 진행률</div>
         <h1 style={{ margin: '8px 0 6px', color: colors.text }}>{plans.length}개 중 {donePlans}개 완료</h1>
         <div style={{ height: 10, borderRadius: 999, background: '#EEE4D8', marginTop: 14, overflow: 'hidden' }}>
-          <div style={{ width: `${planRate}%`, height: '100%', background: colors.primary, borderRadius: 999 }} />
+          <div style={{ width: `${planRate}%`, height: '100%', background: colors.accentDeep, borderRadius: 999 }} />
         </div>
       </Panel>
 
@@ -295,7 +450,7 @@ export default function App() {
             {block.map((item) => (
               <div key={item.title} style={{ display: 'flex', alignItems: 'center', padding: '13px 0', borderTop: `1px solid ${colors.line}` }}>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 850 }}>{item.title}</div>
+                  <div style={{ fontWeight: 750 }}>{item.title}</div>
                   <div style={{ color: colors.sub, fontSize: 13 }}>{item.time}</div>
                 </div>
                 {statusButton(item)}
@@ -308,9 +463,9 @@ export default function App() {
       <Section title="오늘 돌아보기">
         <Panel>
           <TextArea value={planDiary} onChange={setPlanDiary} placeholder="오늘 가장 잘한 일은 뭐였나요?" maxLength={100} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, fontSize: 12, color: colors.sub }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, fontSize: 12, color: colors.sub }}>
             <span>{planDiary.length}/100자</span>
-            <button onClick={() => alert('계획 일기가 저장되었어요.')} style={smallButton(colors)}>저장</button>
+            <button onClick={() => alert('계획 일기가 저장되었어요.')} style={smallButton}>저장</button>
           </div>
         </Panel>
       </Section>
@@ -325,14 +480,14 @@ export default function App() {
         <h1>토리 Lv.4</h1>
         <p style={{ color: colors.sub }}>별 {stars}개 · 성장률 {growth}%</p>
         <div style={{ height: 10, borderRadius: 999, background: '#EEE4D8', overflow: 'hidden' }}>
-          <div style={{ width: `${growth}%`, height: '100%', background: colors.primary }} />
+          <div style={{ width: `${growth}%`, height: '100%', background: colors.accentDeep }} />
         </div>
       </Panel>
 
       <Section title="독서통장">
         <Panel>
           {books.map((book) => (
-            <button key={book.title} onClick={() => setSelectedBook(book.title)} style={{ width: '100%', textAlign: 'left', border: `1px solid ${selectedBook === book.title ? colors.primary : colors.line}`, background: selectedBook === book.title ? colors.primarySoft : colors.surface, borderRadius: 18, padding: 13, marginBottom: 10 }}>
+            <button key={book.title} onClick={() => setSelectedBook(book.title)} style={{ width: '100%', textAlign: 'left', border: `1px solid ${selectedBook === book.title ? colors.accent : colors.line}`, background: selectedBook === book.title ? colors.accentSoft : colors.surface, borderRadius: 18, padding: 13, marginBottom: 10 }}>
               <b>{book.title}</b>
               <div style={{ color: colors.sub, fontSize: 12 }}>{book.age} · {book.desc}</div>
             </button>
@@ -345,15 +500,15 @@ export default function App() {
         <Panel>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 8, marginBottom: 12 }}>
             {Object.entries(ageLimits).map(([key, value]) => (
-              <button key={key} onClick={() => { setAgeGroup(key); setBookReport(''); }} style={{ border: ageGroup === key ? `1.5px solid ${colors.primary}` : `1px solid ${colors.line}`, background: ageGroup === key ? colors.primarySoft : colors.surface, borderRadius: 14, padding: 9, fontWeight: 800, color: colors.sub, fontSize: 11 }}>
+              <button key={key} onClick={() => { setAgeGroup(key); setBookReport(''); }} style={{ border: ageGroup === key ? `1.5px solid ${colors.accent}` : `1px solid ${colors.line}`, background: ageGroup === key ? colors.accentSoft : colors.surface, borderRadius: 14, padding: 9, fontWeight: 750, color: colors.sub, fontSize: 11 }}>
                 {value.label}
               </button>
             ))}
           </div>
           <TextArea value={bookReport} onChange={setBookReport} placeholder="책에서 기억나는 장면을 적어봐요." maxLength={ageLimits[ageGroup].max} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, fontSize: 12, color: colors.sub }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, fontSize: 12, color: colors.sub }}>
             <span>{bookReport.length}/{ageLimits[ageGroup].max}자</span>
-            <button onClick={() => alert('독후감이 저장되었어요.')} style={smallButton(colors)}>저장</button>
+            <button onClick={() => alert('독후감이 저장되었어요.')} style={smallButton}>저장</button>
           </div>
         </Panel>
       </Section>
@@ -371,7 +526,7 @@ export default function App() {
         </div>
       </Panel>
       <Section title="오늘의 추천">
-        <Panel style={{ background: '#F4EEE6' }}>
+        <Panel style={{ background: colors.soft }}>
           <p style={{ margin: 0, lineHeight: 1.7 }}>오늘은 무리한 루틴보다 짧은 대화와 가벼운 활동을 추천해요.</p>
         </Panel>
       </Section>
@@ -387,7 +542,7 @@ export default function App() {
           <div key={d} style={{ marginBottom: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: colors.sub }}><span>{d}</span><b>{55 + i * 6}%</b></div>
             <div style={{ height: 9, background: colors.soft, borderRadius: 999, marginTop: 5 }}>
-              <div style={{ width: `${55 + i * 6}%`, height: '100%', background: colors.primary, borderRadius: 999 }} />
+              <div style={{ width: `${55 + i * 6}%`, height: '100%', background: colors.accentDeep, borderRadius: 999 }} />
             </div>
           </div>
         ))}
@@ -404,8 +559,8 @@ export default function App() {
           <div key={plan.title} style={{ borderTop: `1px solid ${colors.line}`, padding: '14px 0' }}>
             <b>{plan.title}</b>
             <p style={{ color: colors.sub, fontSize: 13 }}>{plan.time} · 완료 요청</p>
-            <button onClick={() => updatePlanStatus(plan.title, 'approved')} style={smallButton(colors)}>승인</button>
-            <button onClick={() => updatePlanStatus(plan.title, 'ready')} style={{ ...smallButton(colors), background: colors.primarySoft, color: colors.primary, marginLeft: 8 }}>반려</button>
+            <button onClick={() => updatePlanStatus(plan.title, 'approved')} style={smallButton}>승인</button>
+            <button onClick={() => updatePlanStatus(plan.title, 'ready')} style={{ ...smallButton, background: colors.accentSoft, color: colors.accentDeep, marginLeft: 8 }}>반려</button>
           </div>
         ))}
       </Panel>
@@ -417,7 +572,7 @@ export default function App() {
       <Header title="커뮤니티" sub="Parent Talk" />
       {communityPosts.map((post) => (
         <Panel key={post.title} style={{ marginBottom: 14 }}>
-          <span style={{ padding: '5px 9px', borderRadius: 999, background: colors.primarySoft, color: colors.primary, fontSize: 12, fontWeight: 850 }}>{post.category}</span>
+          <span style={{ padding: '5px 9px', borderRadius: 999, background: colors.accentSoft, color: colors.accentDeep, fontSize: 12, fontWeight: 750 }}>{post.category}</span>
           <h3>{post.title}</h3>
           <p style={{ color: colors.sub }}>{post.body}</p>
           <div style={{ background: colors.soft, borderRadius: 18, padding: 12 }}>
@@ -446,9 +601,32 @@ export default function App() {
   const navs = userType === 'parent' ? parentNavs : childNavs;
 
   const BottomNav = () => (
-    <div style={{ position: 'fixed', left: '50%', bottom: 14, transform: 'translateX(-50%)', width: 'calc(100% - 32px)', maxWidth: 430, background: 'rgba(255,255,255,.94)', border: `1px solid ${colors.line}`, borderRadius: 24, padding: 8, display: 'grid', gridTemplateColumns: `repeat(${navs.length},1fr)`, boxShadow: '0 16px 45px rgba(90,70,45,.16)' }}>
+    <div style={{
+      position: 'fixed',
+      left: '50%',
+      bottom: 16,
+      transform: 'translateX(-50%)',
+      width: 'calc(100% - 40px)',
+      maxWidth: 430,
+      background: 'rgba(255,253,249,.94)',
+      border: `1px solid ${colors.line}`,
+      borderRadius: 26,
+      padding: 8,
+      display: 'grid',
+      gridTemplateColumns: `repeat(${navs.length},1fr)`,
+      boxShadow: '0 10px 30px rgba(80,60,40,.10)',
+      backdropFilter: 'blur(14px)',
+    }}>
       {navs.map(([key, label]) => (
-        <button key={key} onClick={() => setTab(key)} style={{ border: 'none', borderRadius: 17, padding: '10px 0', background: tab === key ? colors.primarySoft : 'transparent', color: tab === key ? colors.primary : colors.sub, fontWeight: 900, cursor: 'pointer' }}>
+        <button key={key} onClick={() => setTab(key)} style={{
+          border: 'none',
+          borderRadius: 18,
+          padding: '10px 0',
+          background: tab === key ? colors.accentSoft : 'transparent',
+          color: tab === key ? colors.accentDeep : colors.sub,
+          fontWeight: 750,
+          cursor: 'pointer',
+        }}>
           {label}
         </button>
       ))}
@@ -476,10 +654,10 @@ function bigCardStyle(colors) {
   return {
     border: `1px solid ${colors.line}`,
     background: colors.surface,
-    borderRadius: 26,
-    padding: 20,
+    borderRadius: 24,
+    padding: 18,
     textAlign: 'left',
-    boxShadow: '0 14px 40px rgba(90,70,45,.07)',
+    boxShadow: '0 8px 24px rgba(80,60,40,.06)',
     cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column',
@@ -488,15 +666,18 @@ function bigCardStyle(colors) {
   };
 }
 
-function smallButton(colors) {
+function iconCircle(colors) {
   return {
-    border: 'none',
-    background: colors.primary,
-    color: '#fff',
-    borderRadius: 999,
-    padding: '8px 14px',
-    fontWeight: 850,
-    cursor: 'pointer',
+    width: 38,
+    height: 38,
+    borderRadius: '50%',
+    background: colors.accentSoft,
+    color: colors.accentDeep,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 20,
+    fontWeight: 800,
   };
 }
 
