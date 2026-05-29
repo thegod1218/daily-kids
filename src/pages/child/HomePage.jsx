@@ -64,8 +64,8 @@ export default function HomePage() {
          src="/elephant.png"
         alt=""
         style={{
-          width: 38,
-          height: 38,
+          width: 28,
+          height: 28,
           objectFit: 'contain'
           transform: 'translateY(2px)'
           }}
