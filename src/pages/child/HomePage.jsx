@@ -86,13 +86,15 @@ export default function HomePage() {
             <div className="avatar-wrap">
               <div className="avatar">
   <img
-    src={elephantImg}
-    alt="elephant"
-    style={{
-      width: 42,
-      height: 42,
-      objectFit: 'contain'
-    }}
+  src={elephantImg}
+  alt="elephant"
+  style={{
+    width: 58,
+    height: 58,
+    objectFit: 'cover',
+    transform: 'scale(1.35)',
+    filter: 'saturate(1.25) contrast(1.08) brightness(1.05)'
+  }}
   />
 </div>
               <div className="avatar-lv">Lv.{level}</div>
