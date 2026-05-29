@@ -5,6 +5,7 @@ import { useToast } from '../../hooks/useToast'
 import TabBar from '../../components/TabBar'
 import { ProgBar, LevelUp } from '../../components/Common'
 import dayjs from 'dayjs'
+import elephantImg from '../../assets/elephant.png'
 
 const AV = { chick: '🐣', cat: '🐱', dog: '🐶', fox: '🦊' }
 
@@ -83,7 +84,17 @@ export default function HomePage() {
         <div className="spb">
           <div className="row">
             <div className="avatar-wrap">
-              <div className="avatar">{AV[childAvatar] || '🐣'}</div>
+              <div className="avatar">
+  <img
+    src={elephantImg}
+    alt="elephant"
+    style={{
+      width: 42,
+      height: 42,
+      objectFit: 'contain'
+    }}
+  />
+</div>
               <div className="avatar-lv">Lv.{level}</div>
             </div>
 
