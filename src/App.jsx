@@ -10,11 +10,16 @@ export default function App() {
   const [ageGroup, setAgeGroup] = useState('lower');
   const [selectedBook, setSelectedBook] = useState('오늘의 마음 사전');
   const [bookReport, setBookReport] = useState('');
-  const [missionStatus, setMissionStatus] = useState({
-    '숙제하기': 'ready',
-    '태권도 가기': 'ready',
-    '독서 10분': 'ready',
-  });
+
+  const [plans, setPlans] = useState([
+    { group: '아침', icon: '☀️', time: '07:30', title: '기상하기', status: 'approved' },
+    { group: '아침', icon: '☀️', time: '07:40', title: '양치하기', status: 'approved' },
+    { group: '아침', icon: '☀️', time: '08:20', title: '가방 챙기기', status: 'ready' },
+    { group: '오후', icon: '🏫', time: '15:00', title: '숙제하기', status: 'ready' },
+    { group: '오후', icon: '🏫', time: '16:00', title: '태권도 가기', status: 'ready' },
+    { group: '저녁', icon: '🌙', time: '20:00', title: '독서 10분', status: 'ready' },
+    { group: '저녁', icon: '🌙', time: '21:00', title: '잠자리 준비', status: 'ready' },
+  ]);
 
   const colors = {
     bg: '#FAF7F2',
@@ -31,59 +36,11 @@ export default function App() {
   };
 
   const emotionMap = {
-    happy: {
-      icon: '😊',
-      label: '행복',
-      text: '오늘 기분이 좋아 보여요. 좋았던 순간을 짧게 기록해보면 좋아요.',
-      contents: ['좋았던 일 3가지 말하기', '가족 산책 15분', '잠들기 전 칭찬 카드'],
-    },
-    calm: {
-      icon: '😐',
-      label: '보통',
-      text: '평온한 하루예요. 조용한 독서나 가벼운 정리 루틴이 잘 맞아요.',
-      contents: ['10분 독서 루틴', '방 정리 미션', '차분한 음악 듣기'],
-    },
-    sad: {
-      icon: '😢',
-      label: '속상',
-      text: '속상한 마음이 있었나 봐요. 먼저 마음을 들어주고 쉬는 시간이 필요해요.',
-      contents: ['토리와 3번 숨쉬기', '기분 그림 그리기', '부모님과 산책하기'],
-    },
-    tired: {
-      icon: '😴',
-      label: '피곤',
-      text: '몸이 쉬고 싶다는 신호예요. 오늘은 루틴을 조금 가볍게 줄여보세요.',
-      contents: ['취침 20분 앞당기기', '따뜻한 물 마시기', '짧은 스트레칭'],
-    },
+    happy: { icon: '😊', label: '행복', text: '오늘 기분이 좋아 보여요. 좋았던 순간을 짧게 기록해보면 좋아요.', contents: ['좋았던 일 3가지 말하기', '가족 산책 15분', '잠들기 전 칭찬 카드'] },
+    calm: { icon: '😐', label: '보통', text: '평온한 하루예요. 조용한 독서나 가벼운 정리 루틴이 잘 맞아요.', contents: ['10분 독서 루틴', '방 정리 미션', '차분한 음악 듣기'] },
+    sad: { icon: '😢', label: '속상', text: '속상한 마음이 있었나 봐요. 먼저 마음을 들어주고 쉬는 시간이 필요해요.', contents: ['토리와 3번 숨쉬기', '기분 그림 그리기', '부모님과 산책하기'] },
+    tired: { icon: '😴', label: '피곤', text: '몸이 쉬고 싶다는 신호예요. 오늘은 루틴을 조금 가볍게 줄여보세요.', contents: ['취침 20분 앞당기기', '따뜻한 물 마시기', '짧은 스트레칭'] },
   };
-
-  const schedule = [
-    {
-      group: '아침',
-      icon: '☀️',
-      items: [
-        { time: '07:30', title: '기상하기', done: true },
-        { time: '07:40', title: '양치하기', done: true },
-        { time: '08:20', title: '가방 챙기기', done: false },
-      ],
-    },
-    {
-      group: '오후',
-      icon: '🏫',
-      items: [
-        { time: '15:00', title: '숙제하기', done: false },
-        { time: '16:00', title: '태권도 가기', done: false },
-      ],
-    },
-    {
-      group: '저녁',
-      icon: '🌙',
-      items: [
-        { time: '20:00', title: '독서 10분', done: false },
-        { time: '21:00', title: '잠자리 준비', done: false },
-      ],
-    },
-  ];
 
   const books = [
     { title: '오늘의 마음 사전', age: '초등 저학년', desc: '감정을 말로 표현하는 연습을 도와주는 책' },
@@ -104,15 +61,43 @@ export default function App() {
     { place: '집', time: '17:21', status: '도착 예정' },
   ];
 
-  const currentEmotion = emotionMap[emotion];
-  const pendingMissions = Object.entries(missionStatus).filter(([_, status]) => status === 'pending');
-  const allPlans = schedule.flatMap((s) => s.items);
-  const donePlans = allPlans.filter((item) => item.done || missionStatus[item.title] === 'approved').length;
-  const planRate = Math.round((donePlans / allPlans.length) * 100);
+  const communityPosts = [
+    {
+      category: '식사',
+      title: '우리 아이가 오늘 밥을 너무 잘 먹었어요 😊',
+      body: '계란찜이랑 소고기무국 해줬더니 평소보다 훨씬 잘 먹네요.',
+      comments: ['오 어떤 메뉴 해주셨어요?', '소고기무국 좋네요. 저도 내일 해봐야겠어요!'],
+    },
+    {
+      category: '수면',
+      title: '잠들기 전 루틴 뭐 하세요?',
+      body: '요즘 잠드는 시간이 늦어져서 독서 루틴을 넣어볼까 고민 중이에요.',
+      comments: ['저희는 조명 낮추고 10분 책 읽어요.', '따뜻한 물 마시는 것도 도움 됐어요.'],
+    },
+    {
+      category: '독서',
+      title: '초등 저학년 책 추천 부탁드려요',
+      body: '글밥이 너무 많지 않고 감정 표현에 도움 되는 책이면 좋겠어요.',
+      comments: ['마음 사전류 책 괜찮았어요!', '그림 많은 책부터 시작하면 좋아요.'],
+    },
+  ];
 
-  const changeMission = (title, next) => {
-    setMissionStatus((prev) => ({ ...prev, [title]: next }));
+  const currentEmotion = emotionMap[emotion];
+  const donePlans = plans.filter((p) => p.status === 'approved').length;
+  const pendingPlans = plans.filter((p) => p.status === 'pending');
+  const planRate = Math.round((donePlans / plans.length) * 100);
+  const stars = donePlans;
+  const growth = Math.min(100, 50 + donePlans * 7);
+
+  const updatePlanStatus = (title, status) => {
+    setPlans((prev) => prev.map((p) => (p.title === title ? { ...p, status } : p)));
   };
+
+  const groupedPlans = ['아침', '오후', '저녁'].map((group) => ({
+    group,
+    icon: plans.find((p) => p.group === group)?.icon,
+    items: plans.filter((p) => p.group === group),
+  }));
 
   const Tori = ({ small = false }) => (
     <div style={{ width: small ? 72 : 128, height: small ? 72 : 128, position: 'relative', margin: small ? 0 : '0 auto' }}>
@@ -137,9 +122,7 @@ export default function App() {
   );
 
   const Panel = ({ children, style = {} }) => (
-    <div style={{ background: colors.surface, borderRadius: 28, padding: 20, border: `1px solid ${colors.line}`, boxShadow: '0 14px 40px rgba(90,70,45,.07)', ...style }}>
-      {children}
-    </div>
+    <div style={{ background: colors.surface, borderRadius: 28, padding: 20, border: `1px solid ${colors.line}`, boxShadow: '0 14px 40px rgba(90,70,45,.07)', ...style }}>{children}</div>
   );
 
   const Section = ({ title, caption, children }) => (
@@ -151,9 +134,7 @@ export default function App() {
   );
 
   const Button = ({ children, onClick, secondary = false }) => (
-    <button onClick={onClick} style={{ width: '100%', padding: 16, marginTop: 10, borderRadius: 18, border: secondary ? `1px solid ${colors.line}` : 'none', background: secondary ? colors.surface : colors.primary, color: secondary ? colors.text : '#fff', fontSize: 16, fontWeight: 850, cursor: 'pointer', boxShadow: secondary ? 'none' : '0 10px 25px rgba(217,140,95,.25)' }}>
-      {children}
-    </button>
+    <button onClick={onClick} style={{ width: '100%', padding: 16, marginTop: 10, borderRadius: 18, border: secondary ? `1px solid ${colors.line}` : 'none', background: secondary ? colors.surface : colors.primary, color: secondary ? colors.text : '#fff', fontSize: 16, fontWeight: 850, cursor: 'pointer', boxShadow: secondary ? 'none' : '0 10px 25px rgba(217,140,95,.25)' }}>{children}</button>
   );
 
   const Input = ({ placeholder, type = 'text' }) => (
@@ -174,15 +155,12 @@ export default function App() {
     </div>
   );
 
-  const statusButton = (title) => {
-    const status = missionStatus[title] || 'none';
-    const base = { border: 'none', borderRadius: 999, padding: '8px 12px', fontWeight: 850, fontSize: 12 };
-
-    if (status === 'ready') return <button onClick={() => changeMission(title, 'doing')} style={{ ...base, background: colors.primarySoft, color: colors.primary }}>하기</button>;
-    if (status === 'doing') return <button onClick={() => changeMission(title, 'pending')} style={{ ...base, background: colors.primary, color: '#fff' }}>완료했어요</button>;
-    if (status === 'pending') return <span style={{ ...base, background: '#EEF3EA', color: colors.green }}>확인 중</span>;
-    if (status === 'approved') return <span style={{ ...base, background: '#EEF3EA', color: colors.green }}>승인 완료</span>;
-    return <button style={{ ...base, background: colors.primarySoft, color: colors.primary }}>하기</button>;
+  const statusButton = (plan) => {
+    const base = { border: 'none', borderRadius: 999, padding: '8px 12px', fontWeight: 850, fontSize: 12, cursor: 'pointer' };
+    if (plan.status === 'ready') return <button onClick={() => updatePlanStatus(plan.title, 'doing')} style={{ ...base, background: colors.primarySoft, color: colors.primary }}>하기</button>;
+    if (plan.status === 'doing') return <button onClick={() => updatePlanStatus(plan.title, 'pending')} style={{ ...base, background: colors.primary, color: '#fff' }}>완료했어요</button>;
+    if (plan.status === 'pending') return <span style={{ ...base, background: '#EEF3EA', color: colors.green, cursor: 'default' }}>확인 중</span>;
+    if (plan.status === 'approved') return <span style={{ ...base, background: '#EEF3EA', color: colors.green, cursor: 'default' }}>승인 완료</span>;
   };
 
   if (screen === 'start') return (
@@ -268,7 +246,7 @@ export default function App() {
           <div>
             <div style={{ fontSize: 13, color: colors.sub, fontWeight: 800 }}>Tori Growth</div>
             <h1 style={{ margin: '6px 0', fontSize: 30, color: colors.text }}>토리 Lv.4</h1>
-            <p style={{ margin: 0, color: colors.sub, fontSize: 14 }}>미션을 완료할수록 토리가 자라요.</p>
+            <p style={{ margin: 0, color: colors.sub, fontSize: 14 }}>별 {stars}개 · 성장률 {growth}%</p>
           </div>
         </div>
       </Panel>
@@ -319,13 +297,13 @@ export default function App() {
       <Header title="오늘의 생활계획표" sub="아이 화면" />
       <Panel style={{ padding: 24, marginBottom: 14 }}>
         <div style={{ color: colors.sub, fontSize: 13, fontWeight: 800 }}>오늘의 진행률</div>
-        <h1 style={{ margin: '8px 0 6px', color: colors.text, fontSize: 30 }}>{allPlans.length}개 중 {donePlans}개 완료</h1>
+        <h1 style={{ margin: '8px 0 6px', color: colors.text, fontSize: 30 }}>{plans.length}개 중 {donePlans}개 완료</h1>
         <div style={{ height: 10, borderRadius: 999, background: '#EEE4D8', marginTop: 14, overflow: 'hidden' }}>
           <div style={{ width: `${planRate}%`, height: '100%', background: colors.primary, borderRadius: 999 }} />
         </div>
       </Panel>
 
-      {schedule.map((block) => (
+      {groupedPlans.map((block) => (
         <Panel key={block.group} style={{ marginBottom: 14 }}>
           <div style={{ fontWeight: 900, color: colors.text, marginBottom: 12 }}>{block.icon} {block.group}</div>
           {block.items.map((item, idx) => (
@@ -334,7 +312,7 @@ export default function App() {
                 <div style={{ fontWeight: 850, color: colors.text }}>{item.title}</div>
                 <div style={{ fontSize: 13, color: colors.sub, marginTop: 3 }}>{item.time}</div>
               </div>
-              {item.done ? <span style={{ background: '#EEF3EA', color: colors.green, borderRadius: 999, padding: '8px 12px', fontSize: 12, fontWeight: 850 }}>완료</span> : statusButton(item.title)}
+              {statusButton(item)}
             </div>
           ))}
         </Panel>
@@ -361,7 +339,6 @@ export default function App() {
 
   const ChildBook = () => {
     const limit = ageLimits[ageGroup];
-
     return (
       <>
         <Header title="독서통장" sub="Daily Kids" />
@@ -386,7 +363,6 @@ export default function App() {
                 </button>
               ))}
             </div>
-
             <div style={{ color: colors.sub, fontSize: 13, marginBottom: 10 }}>선택한 책: <b style={{ color: colors.text }}>{selectedBook}</b></div>
             <TextArea value={bookReport} onChange={setBookReport} placeholder="이 책에서 가장 기억에 남는 장면을 적어보세요." maxLength={limit.max} />
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, color: colors.sub, fontSize: 12 }}>
@@ -409,15 +385,11 @@ export default function App() {
           <div style={{ background: colors.soft, borderRadius: 20, padding: 16, color: colors.sub }}>오늘 감정<br /><b style={{ color: colors.text, fontSize: 24 }}>{currentEmotion.icon}</b></div>
         </div>
       </Panel>
-
       <Section title="오늘의 추천" caption="오늘 바로 해볼 수 있는 행동 추천이에요.">
         <Panel style={{ background: '#F4EEE6' }}>
-          <p style={{ margin: 0, lineHeight: 1.7, color: colors.text }}>
-            도윤이의 오늘 감정은 <b>{currentEmotion.label}</b> 상태예요. 오늘은 무리한 루틴보다 짧은 대화와 가벼운 활동을 추천해요.
-          </p>
+          <p style={{ margin: 0, lineHeight: 1.7, color: colors.text }}>도윤이의 오늘 감정은 <b>{currentEmotion.label}</b> 상태예요. 오늘은 무리한 루틴보다 짧은 대화와 가벼운 활동을 추천해요.</p>
         </Panel>
       </Section>
-
       <Section title="안심 체크인">
         <Panel>
           {checkins.map((item, idx) => (
@@ -458,18 +430,44 @@ export default function App() {
       <Header title="승인 대기" sub="Parent Dashboard" />
       <Panel>
         <h3 style={{ marginTop: 0 }}>미션 완료 요청</h3>
-        {pendingMissions.length === 0 && <p style={{ color: colors.sub }}>현재 승인 대기 중인 미션이 없어요.</p>}
-        {pendingMissions.map(([title]) => (
-          <div key={title} style={{ borderTop: `1px solid ${colors.line}`, padding: '14px 0' }}>
-            <b>{title}</b>
-            <p style={{ color: colors.sub, fontSize: 13 }}>도윤이가 완료했다고 요청했어요.</p>
+        {pendingPlans.length === 0 && <p style={{ color: colors.sub }}>현재 승인 대기 중인 미션이 없어요.</p>}
+        {pendingPlans.map((plan) => (
+          <div key={plan.title} style={{ borderTop: `1px solid ${colors.line}`, padding: '14px 0' }}>
+            <b>{plan.title}</b>
+            <p style={{ color: colors.sub, fontSize: 13 }}>{plan.time} · 도윤이가 완료했다고 요청했어요.</p>
             <div style={{ display: 'flex', gap: 8 }}>
-              <button onClick={() => changeMission(title, 'approved')} style={{ border: 'none', background: colors.primary, color: '#fff', borderRadius: 999, padding: '9px 14px', fontWeight: 850 }}>승인</button>
-              <button onClick={() => changeMission(title, 'ready')} style={{ border: 'none', background: colors.primarySoft, color: colors.primary, borderRadius: 999, padding: '9px 14px', fontWeight: 850 }}>반려</button>
+              <button onClick={() => updatePlanStatus(plan.title, 'approved')} style={{ border: 'none', background: colors.primary, color: '#fff', borderRadius: 999, padding: '9px 14px', fontWeight: 850 }}>승인</button>
+              <button onClick={() => updatePlanStatus(plan.title, 'ready')} style={{ border: 'none', background: colors.primarySoft, color: colors.primary, borderRadius: 999, padding: '9px 14px', fontWeight: 850 }}>반려</button>
             </div>
           </div>
         ))}
       </Panel>
+    </>
+  );
+
+  const ParentCommunity = () => (
+    <>
+      <Header title="커뮤니티" sub="Parent Talk" />
+      <Section title="맘톡" caption="식사·수면·학습·감정에 대한 경험을 나눠요.">
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 12 }}>
+          {['전체', '식사', '수면', '독서', '학원/학교', '감정/훈육'].map((tag, idx) => (
+            <button key={tag} style={{ border: 'none', borderRadius: 999, padding: '9px 13px', background: idx === 0 ? colors.primary : colors.primarySoft, color: idx === 0 ? '#fff' : colors.primary, fontWeight: 850, whiteSpace: 'nowrap' }}>{tag}</button>
+          ))}
+        </div>
+        {communityPosts.map((post) => (
+          <Panel key={post.title} style={{ marginBottom: 14 }}>
+            <div style={{ display: 'inline-block', padding: '5px 9px', borderRadius: 999, background: colors.primarySoft, color: colors.primary, fontSize: 12, fontWeight: 850 }}>{post.category}</div>
+            <h3 style={{ color: colors.text, marginBottom: 6 }}>{post.title}</h3>
+            <p style={{ color: colors.sub, lineHeight: 1.6 }}>{post.body}</p>
+            <div style={{ background: colors.soft, borderRadius: 18, padding: 12 }}>
+              {post.comments.map((comment) => (
+                <div key={comment} style={{ color: colors.text, fontSize: 13, marginBottom: 6 }}>ㄴ {comment}</div>
+              ))}
+            </div>
+          </Panel>
+        ))}
+        <Button onClick={() => alert('글쓰기 기능은 추후 계정/DB 연결 후 저장됩니다.')}>글쓰기</Button>
+      </Section>
     </>
   );
 
@@ -495,7 +493,7 @@ export default function App() {
   );
 
   const navs = userType === 'parent'
-    ? [['home', '홈'], ['report', '리포트'], ['approve', '승인'], ['gift', '선물'], ['setting', '설정']]
+    ? [['home', '홈'], ['report', '리포트'], ['approve', '승인'], ['community', '커뮤니티'], ['gift', '선물']]
     : [['home', '홈'], ['plan', '계획'], ['money', '용돈'], ['book', '독서'], ['tori', '토리']];
 
   const BottomNav = () => (
@@ -518,8 +516,8 @@ export default function App() {
       {userType === 'parent' && tab === 'home' && <ParentHome />}
       {userType === 'parent' && tab === 'report' && <ParentReport />}
       {userType === 'parent' && tab === 'approve' && <ParentApprove />}
+      {userType === 'parent' && tab === 'community' && <ParentCommunity />}
       {userType === 'parent' && tab === 'gift' && <ParentGift />}
-      {userType === 'parent' && tab === 'setting' && <Placeholder title="설정" />}
 
       <BottomNav />
     </Shell>
