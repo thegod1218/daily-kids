@@ -148,39 +148,59 @@ export default function HomePage() {
         padding: '20px'
       }}>
         <div className="spb">
-          <div className="row" style={{ gap: 14 }}>
-            <div
-              className="avatar"
-              onClick={() => setShowGallery(true)}
-              style={{
-                width: 54,
-                height: 54,
-                borderRadius: '50%',
-                background: '#F7E6DD',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                overflow: 'hidden'
-              }}
-            >
-              {renderCharacter()}
-            </div>
+           <div
+           className="avatar" 
+           onClick={() => setShowGallery(true)}
+    style={{
+      width: 52,
+      height: 52,
+      minWidth: 52,
+      borderRadius: '50%',
+      background: '#F7E6DD',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow: 'hidden',
+      cursor: 'pointer'
+    }}
+  >
+    {renderCharacter(34)}
+  </div>
 
-            <div>
-              <div style={{
-                fontSize: 13,
-                color: '#7C746D',
-                fontWeight: 600
-              }}>
-                Daily Kids
-              </div>
+  <div>
+    <div
+      style={{
+        fontSize: 12,
+        color: '#7C746D',
+        fontWeight: 600,
+        marginBottom: 2
+      }}
+    >
+      Daily Kids
+    </div>
 
-              <div style={{
-                fontSize: 18,
-                fontWeight: 800
-              }}>
-                오늘 뭐 해볼까?
+    <div
+      style={{
+        fontSize: 18,
+        fontWeight: 800,
+        lineHeight: 1.2,
+        color: '#2C2926'
+      }}
+    >
+      오늘 뭐 해볼까?
+    </div>
+
+    <div
+      style={{
+        fontSize: 12,
+        color: '#9CA3AF',
+        marginTop: 4
+      }}
+    >
+      Lv.1 · 0 / 200 XP
+    </div>
+  </div>
+</div>
               </div>
             </div>
           </div>
