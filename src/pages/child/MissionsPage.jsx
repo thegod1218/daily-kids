@@ -4,8 +4,8 @@ import { useToast } from '../../hooks/useToast'
 import TabBar from '../../components/TabBar'
 import { Sheet } from '../../components/Common'
 
-const TIME_COLOR = { am: '#10B981', pm: '#F59E0B', ev: '#8B5CF6' }
-const TIME_BG    = { am: '#ECFDF5', pm: '#FFFBEB', ev: '#F5F3FF' }
+const TIME_COLOR = { am: 'var(--sage)', pm: 'var(--amber)', ev: 'var(--indigo)' }
+const TIME_BG    = { am: 'var(--sage-l)', pm: 'var(--amber-l)', ev: 'var(--indigo-l)' }
 const TIME_LABEL = { am: '오전', pm: '오후', ev: '저녁' }
 const ICON_MAP   = {
   toothbrush:'🪥', droplet:'💧', sun:'☀️', book:'📚',
@@ -116,7 +116,7 @@ export default function MissionsPage() {
           <div style={{ textAlign: 'center', padding: '8px 0 24px' }}>
             <div style={{ fontSize: 56, marginBottom: 16 }}>{ICON_MAP[confirmM.icon] || '✅'}</div>
             <div style={{ fontSize: 22, fontWeight: 700, color: '#111827', marginBottom: 8 }}>{confirmM.title}</div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: '#F59E0B', marginBottom: 6 }}>+{confirmM.pts}P · +{confirmM.xp}XP</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--amber)', marginBottom: 6 }}>+{confirmM.pts}P · +{confirmM.xp}XP</div>
             {confirmM.needApproval && (
               <div style={{ fontSize: 14, color: '#9CA3AF', marginBottom: 4 }}>부모님 확인 후 포인트가 지급돼요</div>
             )}
