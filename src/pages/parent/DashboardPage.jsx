@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ParentDashboard() {
+export default function DashboardPage() {
   return (
     <div style={styles.page}>
       <header style={styles.header}>
@@ -21,8 +21,10 @@ export default function ParentDashboard() {
       <Card title="📚 독서 리포트">
         <Row label="이번 주 읽은 책" value="4권" />
         <Row label="총 독서 시간" value="85분" />
+
         <div style={styles.note}>
-          오늘의 한 줄 기록<br />
+          오늘의 한 줄 기록
+          <br />
           “강아지가 달 보러 간 게 신기했어요.”
         </div>
       </Card>
@@ -34,10 +36,10 @@ export default function ParentDashboard() {
       </Card>
 
       <Card title="😊 감정 리포트">
-        <Emotion label="행복" emoji="😊" percent={55} />
-        <Emotion label="피곤" emoji="😴" percent={25} />
-        <Emotion label="속상함" emoji="😢" percent={10} />
-        <Emotion label="짜증" emoji="😠" percent={10} />
+        <Emotion emoji="😊" label="행복" percent={55} />
+        <Emotion emoji="😴" label="피곤" percent={25} />
+        <Emotion emoji="😢" label="속상함" percent={10} />
+        <Emotion emoji="😠" label="짜증" percent={10} />
       </Card>
 
       <Card title="💰 용돈 리포트">
@@ -68,15 +70,15 @@ export default function ParentDashboard() {
         />
         <Recommend
           title="추천 활동"
-          text="피곤함 기록이 조금 있어요. 주말에는 가까운 공원 산책이나 실내 키즈카페가 좋아요."
+          text="피곤함 기록이 조금 있어요. 주말에는 가까운 공원 산책이나 실내 키즈카페를 추천해요."
         />
       </Card>
 
       <nav style={styles.nav}>
-        <Tab active label="리포트" icon="📊" />
-        <Tab label="커뮤니티" icon="💬" />
-        <Tab label="GPS" icon="📍" />
-        <Tab label="설정" icon="⚙️" />
+        <Tab active icon="📊" label="리포트" />
+        <Tab icon="💬" label="커뮤니티" />
+        <Tab icon="📍" label="GPS" />
+        <Tab icon="⚙️" label="설정" />
       </nav>
     </div>
   );
@@ -151,7 +153,7 @@ function Recommend({ title, text }) {
 
 function Tab({ icon, label, active }) {
   return (
-    <div style={{ ...styles.tab, color: active ? "#111" : "#aaa" }}>
+    <div style={{ ...styles.tab, color: active ? "#111" : "#999" }}>
       <div>{icon}</div>
       <span>{label}</span>
     </div>
@@ -173,7 +175,7 @@ const styles = {
     marginBottom: 20,
   },
   title: {
-    fontSize: 22,
+    fontSize: 28,
     fontWeight: 800,
   },
   sub: {
@@ -194,7 +196,7 @@ const styles = {
   summary: {
     background: "#fff",
     borderRadius: 16,
-    padding: "12px 6px",
+    padding: 14,
     textAlign: "center",
   },
   summaryLabel: {
@@ -203,7 +205,7 @@ const styles = {
     fontWeight: 700,
   },
   summaryValue: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 800,
     marginTop: 4,
   },
@@ -215,18 +217,18 @@ const styles = {
     border: "1px solid #eee",
   },
   cardTitle: {
-    fontSize: 17,
-    margin: "0 0 14px",
+    fontSize: 20,
+    marginBottom: 14,
   },
   row: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "9px 0",
-    borderBottom: "1px solid #f1f1f1",
+    padding: "10px 0",
+    borderBottom: "1px solid #f2f2f2",
     fontSize: 14,
   },
   note: {
-    background: "#FFF9E8",
+    background: "#FFF4D9",
     padding: 14,
     borderRadius: 14,
     marginTop: 12,
@@ -234,28 +236,26 @@ const styles = {
     lineHeight: 1.5,
   },
   diaryBox: {
-    background: "#F6F3ED",
+    background: "#F4F0E8",
     padding: 16,
-    borderRadius: 16,
+    borderRadius: 14,
     fontSize: 15,
-    lineHeight: 1.5,
   },
   emotionTop: {
     display: "flex",
     justifyContent: "space-between",
+    marginBottom: 6,
     fontSize: 14,
-    marginBottom: 5,
   },
   progressBg: {
     height: 8,
-    background: "#EEE",
+    background: "#eee",
     borderRadius: 999,
     overflow: "hidden",
   },
   progressFill: {
     height: "100%",
     background: "#FFC857",
-    borderRadius: 999,
   },
   goalBox: {
     background: "#F8F7F3",
@@ -267,7 +267,6 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     marginBottom: 8,
-    fontSize: 14,
   },
   smallText: {
     fontSize: 12,
@@ -282,19 +281,19 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    fontSize: 14,
   },
   button: {
     border: "none",
     background: "#FFC857",
     borderRadius: 12,
-    padding: "7px 12px",
+    padding: "8px 12px",
     fontWeight: 700,
+    cursor: "pointer",
   },
   recommend: {
     background: "#F8F7F3",
     padding: 14,
-    borderRadius: 16,
+    borderRadius: 14,
     marginBottom: 10,
   },
   nav: {
@@ -313,4 +312,4 @@ const styles = {
     fontSize: 12,
     fontWeight: 700,
   },
-}; 
+};
