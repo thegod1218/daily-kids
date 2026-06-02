@@ -1,12 +1,3 @@
-두 가지 문제가 보여요.
-
-1. 코끼리 이미지가 이모지로 바뀜 (원래 `/elephant.png` 이미지 사용)
-2. 탭바가 두 개 겹쳐서 나옴 (기존 TabBar + 새로 만든 ChildTabBar)
-3. 2컬 레이아웃이 세로로 쌓임
-
-**`child/HomePage.jsx` 전체 교체해주세요:**
-
-```jsx
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '../../store'
