@@ -173,7 +173,7 @@ const styles = {
   page: {
     minHeight: "100vh",
     background: "#F8F7F3",
-    padding: "20px 18px 100px",
+    padding: "20px 18px 180px",
     fontFamily: "sans-serif",
     color: "#222",
   },
