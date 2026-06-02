@@ -153,7 +153,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div style={{ background: '#FFFDF9', borderRadius: 22, border: '1px solid #E6DDD3', padding: 18, marginBottom: 8 }}>
+        <div style={{ background: '#FFFDF9', borderRadius: 22, border: '1px solid #E6DDD3', padding: 18, marginBottom: 8, overflow: 'hidden' }}>
           <div style={{ fontSize: 17, fontWeight: 800, marginBottom: 4 }}>짧은 일기</div>
           <div style={{ fontSize: 13, color: '#7C746D', marginBottom: 12 }}>오늘 좋았던 일을 한 줄만 적어봐요.</div>
           <textarea
