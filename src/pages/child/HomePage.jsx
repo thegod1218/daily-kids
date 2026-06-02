@@ -37,8 +37,14 @@ export default function HomePage() {
       </div>
 
       <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#fff', borderTop: '1px solid #eee', display: 'flex', justifyContent: 'space-around', padding: '10px 0', zIndex: 100 }}>
-        {[['🏠','홈','/child/home'],['⭐','미션','/child/missions'],['💰','용돈','/child/money'],['📚','독서','/child/books'],['👨‍👩‍👧','부모','/parent/dashboard']].map(([icon, label, path]) => (
-          <button key={path} onClick={() => navigate(path)} style={{ textAlign: 'center', fontSize: 12, fontWeight: 700, cursor: 'pointer', background: 'none', border: 'none', color: window.location.pathname === path ? '#111' : '#888' }}>
+        {[
+          ['🏠','홈','/child/home'],
+          ['⭐','미션','/child/missions'],
+          ['💰','용돈','/child/money'],
+          ['📚','독서','/child/books'],
+          ['👨‍👩‍👧','부모','/parent/dashboard']
+        ].map(([icon, label, path]) => (
+          <button key={path} onClick={() => navigate(path)} style={{ textAlign: 'center', fontSize: 12, fontWeight: 700, cursor: 'pointer', background: 'none', border: 'none', color: '#888' }}>
             <div style={{ fontSize: 22 }}>{icon}</div>
             <span>{label}</span>
           </button>
