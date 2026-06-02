@@ -185,7 +185,7 @@ export default function HomePage() {
         {tabs.map(t => (
           <button key={t.to} onClick={() => nav(t.to)}
             style={{ textAlign: 'center', fontSize: 12, fontWeight: 700, cursor: 'pointer', background: 'none', border: 'none', color: path === t.to ? '#D28A6A' : '#888', fontFamily: 'inherit' }}>
-            <div style={{ fontSize: 18 }}>{t.icon}</div>
+            <div style={{ fontSize: 14 }}>{t.icon}</div>
             <span>{t.label}</span>
           </button>
         ))}
