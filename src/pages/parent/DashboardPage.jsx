@@ -41,7 +41,6 @@ export default function DashboardPage() {
         <Emotion emoji="😊" label="행복" percent={55} />
         <Emotion emoji="😴" label="피곤" percent={25} />
         <Emotion emoji="😢" label="속상함" percent={10} />
-        <Emotion emoji="😠" label="짜증" percent={10} />
       </Card>
 
       <Card title="💰 용돈 리포트">
@@ -56,7 +55,9 @@ export default function DashboardPage() {
             <span>39%</span>
           </div>
           <Progress percent={39} />
-          <div style={styles.smallText}>32,000원 중 12,500원 모았어요</div>
+          <div style={styles.smallText}>
+            32,000원 중 12,500원 모았어요
+          </div>
         </div>
       </Card>
 
@@ -72,21 +73,19 @@ export default function DashboardPage() {
         />
         <Recommend
           title="추천 활동"
-          text="피곤함 기록이 조금 있어요. 주말에는 가까운 공원 산책이나 실내 키즈카페를 추천해요."
+          text="피곤한 기록이 조금 있어요. 주말에는 가까운 공원 산책이나 실내 키즈카페를 추천해요."
         />
       </Card>
-
-      <button
-        onClick={() => navigate("/child/home")}
-        style={styles.childButton}
-      >
-        ⇄ 아이 화면으로
-      </button>
 
       <nav style={styles.nav}>
         <Tab active icon="📊" label="리포트" />
         <Tab icon="💬" label="커뮤니티" />
         <Tab icon="📍" label="GPS" />
+        <Tab
+          icon="👧"
+          label="아이"
+          onClick={() => navigate("/child/home")}
+        />
         <Tab icon="⚙️" label="설정" />
       </nav>
     </div>
@@ -137,7 +136,12 @@ function Emotion({ emoji, label, percent }) {
 function Progress({ percent }) {
   return (
     <div style={styles.progressBg}>
-      <div style={{ ...styles.progressFill, width: `${percent}%` }} />
+      <div
+        style={{
+          ...styles.progressFill,
+          width: `${percent}%`,
+        }}
+      />
     </div>
   );
 }
@@ -160,12 +164,20 @@ function Recommend({ title, text }) {
   );
 }
 
-function Tab({ icon, label, active }) {
+function Tab({ icon, label, active, onClick }) {
   return (
-    <div style={{ ...styles.tab, color: active ? "#111" : "#999" }}>
+    <button
+      onClick={onClick}
+      style={{
+        ...styles.tab,
+        color: active ? "#111" : "#888",
+        background: "none",
+        border: "none",
+      }}
+    >
       <div>{icon}</div>
       <span>{label}</span>
-    </div>
+    </button>
   );
 }
 
@@ -173,51 +185,59 @@ const styles = {
   page: {
     minHeight: "100vh",
     background: "#F8F7F3",
-    padding: "20px 18px 180px",
+    padding: "20px 18px 120px",
     fontFamily: "sans-serif",
     color: "#222",
   },
+
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 20,
   },
+
   title: {
     fontSize: 28,
     fontWeight: 800,
   },
+
   sub: {
     fontSize: 13,
     color: "#777",
     marginTop: 4,
   },
+
   mode: {
     fontWeight: 700,
-    fontSize: 14,
   },
+
   summaryGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
     gap: 8,
     marginBottom: 18,
   },
+
   summary: {
     background: "#fff",
     borderRadius: 16,
     padding: 14,
     textAlign: "center",
   },
+
   summaryLabel: {
     fontSize: 12,
     color: "#7B61FF",
     fontWeight: 700,
   },
+
   summaryValue: {
     fontSize: 22,
     fontWeight: 800,
     marginTop: 4,
   },
+
   card: {
     background: "#fff",
     borderRadius: 22,
@@ -225,63 +245,70 @@ const styles = {
     marginBottom: 16,
     border: "1px solid #eee",
   },
+
   cardTitle: {
     fontSize: 20,
     marginBottom: 14,
   },
+
   row: {
     display: "flex",
     justifyContent: "space-between",
     padding: "10px 0",
-    borderBottom: "1px solid #f2f2f2",
-    fontSize: 14,
+    borderBottom: "1px solid #f1f1f1",
   },
+
   note: {
     background: "#FFF4D9",
     padding: 14,
     borderRadius: 14,
     marginTop: 12,
-    fontSize: 14,
     lineHeight: 1.5,
   },
+
   diaryBox: {
-    background: "#F4F0E8",
+    background: "#F5F1E8",
     padding: 16,
     borderRadius: 14,
-    fontSize: 15,
   },
+
   emotionTop: {
     display: "flex",
     justifyContent: "space-between",
     marginBottom: 6,
-    fontSize: 14,
   },
+
   progressBg: {
     height: 8,
     background: "#eee",
     borderRadius: 999,
     overflow: "hidden",
   },
+
   progressFill: {
     height: "100%",
     background: "#FFC857",
   },
+
   goalBox: {
     background: "#F8F7F3",
     padding: 14,
     borderRadius: 16,
     marginTop: 14,
   },
+
   goalTop: {
     display: "flex",
     justifyContent: "space-between",
     marginBottom: 8,
   },
+
   smallText: {
     fontSize: 12,
     color: "#777",
     marginTop: 6,
   },
+
   approval: {
     background: "#F8F7F3",
     borderRadius: 14,
@@ -291,31 +318,22 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
   },
+
   button: {
     border: "none",
     background: "#FFC857",
     borderRadius: 12,
-    padding: "8px 12px",
+    padding: "8px 14px",
     fontWeight: 700,
-    cursor: "pointer",
   },
+
   recommend: {
     background: "#F8F7F3",
     padding: 14,
     borderRadius: 14,
     marginBottom: 10,
   },
-  childButton: {
-    width: "100%",
-    border: "none",
-    background: "#fff",
-    borderRadius: 16,
-    padding: 14,
-    marginBottom: 16,
-    fontWeight: 700,
-    color: "#666",
-    cursor: "pointer",
-  },
+
   nav: {
     position: "fixed",
     bottom: 0,
@@ -325,11 +343,13 @@ const styles = {
     borderTop: "1px solid #eee",
     display: "flex",
     justifyContent: "space-around",
-    padding: "10px 0 14px",
+    padding: "10px 0",
   },
+
   tab: {
     textAlign: "center",
     fontSize: 12,
     fontWeight: 700,
+    cursor: "pointer",
   },
 };
