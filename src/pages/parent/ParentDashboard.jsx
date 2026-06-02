@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 const MOOD_EMOJI = { happy:'😊', good:'🙂', neutral:'😐', sad:'😢', angry:'😠' }
 const MOOD_LABEL = { happy:'행복', good:'좋음', neutral:'보통', sad:'슬픔', angry:'화남' }
 
-export default function DashboardPage() {
+export default function ParentDashboard() {
   const navigate = useNavigate()
   const [shopSheet, setShopSheet] = useState(false)
   const [reviewSheet, setReviewSheet] = useState(null)
