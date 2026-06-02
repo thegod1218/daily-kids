@@ -1,8 +1,5 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppStore } from '../../store'
-import { Sheet } from '../../components/Common'
-import dayjs from 'dayjs'
 
 const MOOD_EMOJI = { happy:'😊', good:'🙂', neutral:'😐', sad:'😢', angry:'😠' }
 const MOOD_LABEL = { happy:'행복', good:'좋음', neutral:'보통', sad:'슬픔', angry:'화남' }
@@ -13,13 +10,35 @@ export default function ParentDashboard() {
   const [reviewSheet, setReviewSheet] = useState(null)
   const [reviewComment, setReviewComment] = useState('')
 
-  const {
-    childName, points, level, streak,
-    missions, piggies, moodLogs,
-    pendingMissions, books,
-    gpsLogs, approveMission, approveReview, rejectReview,
-    moneyLogs
-  } = useAppStore()
+  // 임시 하드코딩 데이터 (추후 store 연동)
+  const childName = '우리아이'
+  const points = 340
+  const level = 3
+  const streak = 5
+  const missions = [
+    { id: 1, title: '아침 양치', done: true },
+    { id: 2, title: '물 200ml', done: true },
+    { id: 3, title: '독서 30분', done: false },
+    { id: 4, title: '숙제하기', done: false },
+    { id: 5, title: '방 정리', done: false },
+  ]
+  const piggies = [{ id: 1, name: '레고 닌자고', target: 32000, current: 12500 }]
+  const moodLogs = [
+    { type: 'happy', note: '오늘 시험이 잘 봤어요!' },
+    { type: 'good' },
+    { type: 'neutral' },
+  ]
+  const pendingMissions = []
+  const books = [{ id: 1, title: '어린왕자', status: 'approved' }]
+  const gpsLogs = [
+    { id: 1, text: '수학학원 도착', time: '오늘 오후 4:02', type: 'arrive' },
+    { id: 2, text: '수학학원 출발', time: '오늘 오후 6:15', type: 'depart' },
+  ]
+  const moneyLogs = [
+    { type: 'income', amount: 5000 },
+    { type: 'income', amount: 2500 },
+    { type: 'expense', amount: 3000 },
+  ]
 
   const done = missions.filter(m => m.done).length
   const mainPiggy = piggies[0]
@@ -27,17 +46,9 @@ export default function ParentDashboard() {
   const recentMoods = moodLogs.slice(0, 5)
   const pendingBooks = books.filter(b => b.status === 'pendingReview')
   const allPending = pendingMissions.length + pendingBooks.length
-
-  const income  = moneyLogs.filter(r => r.type === 'income').reduce((s, r) => s + r.amount, 0)
+  const income = moneyLogs.filter(r => r.type === 'income').reduce((s, r) => s + r.amount, 0)
   const expense = moneyLogs.filter(r => r.type === 'expense').reduce((s, r) => s + r.amount, 0)
   const balance = income - expense
-
-  const handleApproveReview = () => {
-    if (!reviewSheet) return
-    approveReview(reviewSheet.id, reviewComment)
-    setReviewSheet(null)
-    setReviewComment('')
-  }
 
   return (
     <div style={styles.page}>
@@ -59,16 +70,16 @@ export default function ParentDashboard() {
       {allPending > 0 && (
         <Card title={`🔔 승인 대기 (${allPending}건)`}>
           {pendingMissions.map(p => (
-            <Approval key={p.id} text={`${p.title} 완료 → +${p.pts}P`} onApprove={() => approveMission(p.id)} />
+            <Approval key={p.id} text={`${p.title} 완료 → +${p.pts}P`} onApprove={() => {}} />
           ))}
           {pendingBooks.map(b => (
             <div key={b.id} style={{ ...styles.approval, flexDirection: 'column', alignItems: 'flex-start', gap: 10 }}>
               <div>
                 <div style={{ fontWeight: 700, marginBottom: 4 }}>📚 {b.title} 독후감</div>
-                <div style={{ fontSize: 13, color: '#777', lineHeight: 1.5 }}>{b.review.slice(0, 60)}...</div>
+                <div style={{ fontSize: 13, color: '#777' }}>{b.review?.slice(0, 60)}...</div>
               </div>
               <div style={{ display: 'flex', gap: 8, width: '100%' }}>
-                <button style={{ ...styles.button, flex: 1, background: '#eee', color: '#444' }} onClick={() => rejectReview(b.id)}>다시 쓰기</button>
+                <button style={{ ...styles.button, flex: 1, background: '#eee', color: '#444' }}>다시 쓰기</button>
                 <button style={{ ...styles.button, flex: 2 }} onClick={() => setReviewSheet(b)}>검수하기</button>
               </div>
             </div>
@@ -88,7 +99,9 @@ export default function ParentDashboard() {
                 </div>
               ))}
             </div>
-            {recentMoods[0]?.note && <div style={styles.note}>💬 "{recentMoods[0].note}"</div>}
+            {recentMoods[0]?.note && (
+              <div style={styles.note}>💬 "{recentMoods[0].note}"</div>
+            )}
           </>
         ) : (
           <div style={{ color: '#aaa', fontSize: 14 }}>아직 감정 기록이 없어요</div>
@@ -101,11 +114,18 @@ export default function ParentDashboard() {
         <Row label="총 지출" value={`-${expense.toLocaleString('ko-KR')}원`} />
         {mainPiggy && (
           <div style={styles.goalBox}>
-            <div style={styles.goalTop}><b>🐷 {mainPiggy.name}</b><span>{piggyPct}%</span></div>
+            <div style={styles.goalTop}>
+              <b>🐷 {mainPiggy.name}</b>
+              <span>{piggyPct}%</span>
+            </div>
             <Progress percent={piggyPct} />
-            <div style={styles.smallText}>{mainPiggy.target.toLocaleString('ko-KR')}원 중 {mainPiggy.current.toLocaleString('ko-KR')}원 모았어요</div>
+            <div style={styles.smallText}>
+              {mainPiggy.target.toLocaleString('ko-KR')}원 중 {mainPiggy.current.toLocaleString('ko-KR')}원 모았어요
+            </div>
             {piggyPct >= 100 && (
-              <button style={{ ...styles.button, width: '100%', marginTop: 12 }} onClick={() => setShopSheet(true)}>🛒 목표 달성! 선물 쇼핑하기</button>
+              <button style={{ ...styles.button, width: '100%', marginTop: 12 }} onClick={() => setShopSheet(true)}>
+                🛒 목표 달성! 선물 쇼핑하기
+              </button>
             )}
           </div>
         )}
@@ -127,7 +147,6 @@ export default function ParentDashboard() {
             </div>
           </div>
         ))}
-        {gpsLogs.length === 0 && <div style={{ color: '#aaa', fontSize: 14 }}>알림 기록이 없어요</div>}
       </Card>
 
       <Card title="✅ 생활 습관 달성률">
@@ -145,43 +164,60 @@ export default function ParentDashboard() {
       <nav style={styles.nav}>
         <Tab active icon="📊" label="리포트" />
         <Tab icon="💬" label="커뮤니티" />
-        <Tab icon="📍" label="GPS" onClick={() => navigate('/parent/gps')} />
+        <Tab icon="📍" label="GPS" />
         <Tab icon="👧" label="아이" onClick={() => navigate('/child/home')} />
-        <Tab icon="⚙️" label="설정" onClick={() => navigate('/parent/settings')} />
+        <Tab icon="⚙️" label="설정" />
       </nav>
 
-      <Sheet open={shopSheet} onClose={() => setShopSheet(false)} title="선물 쇼핑하기">
-        {mainPiggy && (
-          <div style={{ background: '#EDF4EF', borderRadius: 14, padding: 14, marginBottom: 16 }}>
-            <div style={{ fontWeight: 700, marginBottom: 6 }}>🐷 {mainPiggy.name}</div>
-            <Progress percent={piggyPct} color="#4A7C59" />
-            <div style={{ fontSize: 12, color: '#666', marginTop: 6 }}>{mainPiggy.current.toLocaleString('ko-KR')}원 / {mainPiggy.target.toLocaleString('ko-KR')}원</div>
-          </div>
-        )}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <button style={{ ...styles.button, background: '#C00', color: '#fff', padding: 14 }}>🛒 쿠팡에서 찾기</button>
-          <button style={{ ...styles.button, background: '#03C75A', color: '#fff', padding: 14 }}>🔍 네이버 쇼핑</button>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button style={{ ...styles.button, flex: 1, background: '#FFC200', color: '#222', padding: 12 }}>G마켓</button>
-            <button style={{ ...styles.button, flex: 1, background: '#F5252C', color: '#fff', padding: 12 }}>11번가</button>
+      {/* 쇼핑 시트 */}
+      {shopSheet && (
+        <div style={styles.overlay} onClick={() => setShopSheet(false)}>
+          <div style={styles.sheet} onClick={e => e.stopPropagation()}>
+            <div style={styles.sheetHandle} />
+            <div style={styles.sheetTitle}>선물 쇼핑하기</div>
+            {mainPiggy && (
+              <div style={{ background: '#EDF4EF', borderRadius: 14, padding: 14, marginBottom: 16 }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>🐷 {mainPiggy.name}</div>
+                <Progress percent={piggyPct} color="#4A7C59" />
+                <div style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
+                  {mainPiggy.current.toLocaleString('ko-KR')}원 / {mainPiggy.target.toLocaleString('ko-KR')}원
+                </div>
+              </div>
+            )}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button style={{ ...styles.button, background: '#C00', color: '#fff', padding: 14, width: '100%' }}>🛒 쿠팡에서 찾기</button>
+              <button style={{ ...styles.button, background: '#03C75A', color: '#fff', padding: 14, width: '100%' }}>🔍 네이버 쇼핑</button>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button style={{ ...styles.button, flex: 1, background: '#FFC200', color: '#222', padding: 12 }}>G마켓</button>
+                <button style={{ ...styles.button, flex: 1, background: '#F5252C', color: '#fff', padding: 12 }}>11번가</button>
+              </div>
+            </div>
           </div>
         </div>
-        <div style={{ marginTop: 14, fontSize: 12, color: '#888', textAlign: 'center' }}>구매 후 영수증 인증 시 아이에게 100P 자동 지급돼요!</div>
-      </Sheet>
+      )}
 
-      <Sheet open={!!reviewSheet} onClose={() => setReviewSheet(null)} title={reviewSheet?.title || '독후감 검수'}>
-        {reviewSheet && (
-          <>
-            <div style={{ fontSize: 12, color: '#888', marginBottom: 10 }}>독후감 {reviewSheet.review.length}자</div>
-            <div style={{ background: '#F8F7F3', borderRadius: 14, padding: 14, fontSize: 14, lineHeight: 1.7, maxHeight: 150, overflowY: 'auto', marginBottom: 14 }}>{reviewSheet.review}</div>
-            <input style={{ width: '100%', height: 48, border: '1.5px solid #eee', borderRadius: 12, padding: '0 14px', fontSize: 14, marginBottom: 14, fontFamily: 'inherit', outline: 'none' }} placeholder="칭찬 한마디 (선택)" value={reviewComment} onChange={e => setReviewComment(e.target.value)} />
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button style={{ ...styles.button, flex: 1, background: '#eee', color: '#444' }} onClick={() => { rejectReview(reviewSheet.id); setReviewSheet(null) }}>다시 쓰기</button>
-              <button style={{ ...styles.button, flex: 2 }} onClick={handleApproveReview}>도장 승인 +30P</button>
+      {/* 독후감 검수 시트 */}
+      {reviewSheet && (
+        <div style={styles.overlay} onClick={() => setReviewSheet(null)}>
+          <div style={styles.sheet} onClick={e => e.stopPropagation()}>
+            <div style={styles.sheetHandle} />
+            <div style={styles.sheetTitle}>{reviewSheet.title} 독후감 검수</div>
+            <div style={{ background: '#F8F7F3', borderRadius: 14, padding: 14, fontSize: 14, lineHeight: 1.7, marginBottom: 14 }}>
+              {reviewSheet.review}
             </div>
-          </>
-        )}
-      </Sheet>
+            <input
+              style={{ width: '100%', height: 48, border: '1.5px solid #eee', borderRadius: 12, padding: '0 14px', fontSize: 14, marginBottom: 14, fontFamily: 'inherit', outline: 'none' }}
+              placeholder="칭찬 한마디 (선택)"
+              value={reviewComment}
+              onChange={e => setReviewComment(e.target.value)}
+            />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button style={{ ...styles.button, flex: 1, background: '#eee', color: '#444' }} onClick={() => setReviewSheet(null)}>닫기</button>
+              <button style={{ ...styles.button, flex: 2 }} onClick={() => setReviewSheet(null)}>도장 승인 +30P</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -228,4 +264,8 @@ const styles = {
   button: { border: 'none', background: '#FFC857', borderRadius: 12, padding: '8px 14px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' },
   nav: { position: 'fixed', bottom: 0, left: 0, right: 0, background: '#fff', borderTop: '1px solid #eee', display: 'flex', justifyContent: 'space-around', padding: '10px 0', zIndex: 100 },
   tab: { textAlign: 'center', fontSize: 12, fontWeight: 700, cursor: 'pointer' },
+  overlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 200, display: 'flex', alignItems: 'flex-end' },
+  sheet: { background: 'white', borderRadius: '26px 26px 0 0', padding: '0 20px 36px', width: '100%', maxHeight: '90vh', overflowY: 'auto' },
+  sheetHandle: { width: 36, height: 4, borderRadius: 2, background: '#E5E7EB', margin: '14px auto 20px' },
+  sheetTitle: { fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 18 },
 }
