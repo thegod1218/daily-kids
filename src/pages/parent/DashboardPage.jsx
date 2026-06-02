@@ -313,4 +313,4 @@ const styles = {
     fontSize: 12,
     fontWeight: 700,
   },
-};
+}; 
