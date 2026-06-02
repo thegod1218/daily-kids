@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
+
   return (
     <div style={styles.page}>
       <header style={styles.header}>
@@ -21,7 +24,6 @@ export default function DashboardPage() {
       <Card title="📚 독서 리포트">
         <Row label="이번 주 읽은 책" value="4권" />
         <Row label="총 독서 시간" value="85분" />
-
         <div style={styles.note}>
           오늘의 한 줄 기록
           <br />
@@ -73,6 +75,13 @@ export default function DashboardPage() {
           text="피곤함 기록이 조금 있어요. 주말에는 가까운 공원 산책이나 실내 키즈카페를 추천해요."
         />
       </Card>
+
+      <button
+        onClick={() => navigate("/child/home")}
+        style={styles.childButton}
+      >
+        ⇄ 아이 화면으로
+      </button>
 
       <nav style={styles.nav}>
         <Tab active icon="📊" label="리포트" />
@@ -164,7 +173,7 @@ const styles = {
   page: {
     minHeight: "100vh",
     background: "#F8F7F3",
-    padding: "20px 18px 88px",
+    padding: "20px 18px 100px",
     fontFamily: "sans-serif",
     color: "#222",
   },
@@ -295,6 +304,17 @@ const styles = {
     padding: 14,
     borderRadius: 14,
     marginBottom: 10,
+  },
+  childButton: {
+    width: "100%",
+    border: "none",
+    background: "#fff",
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 16,
+    fontWeight: 700,
+    color: "#666",
+    cursor: "pointer",
   },
   nav: {
     position: "fixed",
