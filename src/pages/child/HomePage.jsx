@@ -166,17 +166,21 @@ export default function HomePage() {
           <div style={{ fontSize: 17, fontWeight: 800, marginBottom: 4 }}>짧은 일기</div>
           <div style={{ fontSize: 13, color: '#7C746D', marginBottom: 12 }}>오늘 좋았던 일을 한 줄만 적어봐요.</div>
           <textarea
-            placeholder="예: 친구랑 같이 놀아서 좋았어요."
-            value={moodNote}
-            maxLength={120}
-            onChange={e => setMoodNote(e.target.value)}
-            style={{ width: '100%', minHeight: 92, resize: 'none', fontSize: 14, lineHeight: 1.6, border: '1px solid #E6DDD3', borderRadius: 14, padding: 14, outline: 'none', fontFamily: 'inherit', background: '#FFFDF9', color: '#2C2926' }}
-          />
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
-            <span style={{ fontSize: 12, color: '#7C746D' }}>{moodNote.length}/120자</span>
-            <button onClick={handleSaveMoodNote} style={{ padding: '8px 14px', borderRadius: 999, fontSize: 13, border: 'none', background: '#D28A6A', color: '#fff', fontWeight: 800, cursor: 'pointer', fontFamily: 'inherit' }}>저장</button>
-          </div>
-        </div>
+            style={{ 
+  width: '100%', 
+  minHeight: 92, 
+  resize: 'none', 
+  fontSize: 14, 
+  lineHeight: 1.6, 
+  border: '1px solid #E6DDD3', 
+  borderRadius: 14, 
+  padding: 14, 
+  outline: 'none', 
+  fontFamily: 'inherit', 
+  background: '#FFFDF9', 
+  color: '#2C2926',
+  boxSizing: 'border-box'
+}}
 
       </div>
 
